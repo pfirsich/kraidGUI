@@ -1,6 +1,3 @@
-
-
-
 function module(gui)
 	local theme = {}
 
@@ -27,45 +24,28 @@ function module(gui)
 	--------------------------------------------------------------------
 	theme.Window = {}
 	theme.Window.titleBarBorder = 2
+	theme.Window.titleOffsetX = 5
 	theme.Window.titleBarHeight = 25
 
-	function theme.Window.update(self, uiState)
-		local lastHovered = self.hovered
-		local lastClicked = self.clicked
-
-		local localMouse = gui.internal.toLocal(uiState.mouse.position)
-
-		self.hovered = gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
-		self.clicked = self.hovered and uiState.mouse.leftDown
-
-		if self.hovered then
-			if not self.lastHovered and self.onMouseEnter then
-				self:onMouseEnter()
-			end
-
-			if uiState.mouse.pressed then
-				self:toTop()
-				if self.onClicked then self:onClicked() end
-
-				if gui.internal.inRect(localMouse, {0, 0, self.width, theme.Window.titleBarHeight}) then
-					self.dragged = true
-				end
-			end
-		else
-			if self.lastHovered and self.onMouseExit then
-				self:onMouseExit()
-			end
-		end
-
-		if self.lastClicked and not self.clicked and self.onMouseUp then
-			self:onMouseUp()
-		end
-
+	function theme.Window.mouseMove(self, x, y, dx, dy)
 		if self.dragged then
-			if uiState.mouse.leftDown then
-				self.position = {self.position[1] + uiState.mouse.move[1], self.position[2] + uiState.mouse.move[2]}
-			else
-				self.dragged = false
+			self.position = {self.position[1] + dx, self.position[2] + dy}
+			if self.onMove then self:onMove(unpack(self.position)) end
+			return true
+		end
+	end
+
+	function theme.Window.mouseReleased(self, x, y, button)
+		if button == "l" then self.dragged = false end
+	end
+
+	function theme.Window.mousePressed(self, x, y, button)
+		if button == "l" then
+			local localMouse = gui.internal.toLocal(x, y)
+
+			if gui.internal.inRect(localMouse, {0, 0, self.width, theme.Window.titleBarHeight}) then
+				self.dragged = true
+				return true
 			end
 		end
 	end
@@ -83,7 +63,11 @@ function module(gui)
 										self.width - theme.Window.titleBarBorder * 2,
 										theme.Window.titleBarHeight - theme.Window.titleBarBorder * 2)
 
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, 1)
+		gui.graphics.setColor(theme.colors.text)
+		gui.graphics.text.draw(self.text, theme.Window.titleOffsetX, theme.Window.titleBarBorder/2 - gui.graphics.text.getHeight()/2)
+
+		gui.graphics.setColor(theme.colors.border)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height, 2)
 	end
 
 	return theme

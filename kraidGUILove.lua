@@ -24,10 +24,6 @@ do
             drawShape(love.graphics.rectangle, lineWidth, x, y, w, h)
         end
 
-        function gui.graphics.drawText(text, x, y)
-            love.graphics.print(text, x, y)
-        end
-
         function gui.graphics.drawCircle(x, y, radius, segments, lineWidth)
             drawShape(love.graphics.circle, lineWidth, x, y, radius, segments)
         end
@@ -36,18 +32,22 @@ do
             drawShape(love.graphics.polygon, lineWidth, points)
         end
 
-        gui.graphics.scissorRect = love.graphics.setScissor
-    end
+        gui.graphics.text = {}
+        function gui.graphics.text.getHeight()
+            return love.graphics.getFont():getHeight()
+        end
 
-    function kraidGUILove.uiState()
-        return {
-    		mouse = {
-    			leftDown = love.mouse.isDown("l"),
-    			rightDown = love.mouse.isDown("r"),
-    			mouseWheel = (love.mouse.isDown("wu") and 1 or 0) - (love.mouse.isDown("wd") and 1 or 0),
-    			position = {love.mouse.getPosition()}
-    		}
-    	}
+        function gui.graphics.text.getWidth(text)
+            return love.graphics.getFont():getWidth(text)
+        end
+
+        function gui.graphics.text.draw(text, x, y)
+            local origin = gui.internal.origin()
+            love.graphics.print(text, x + origin[1], y + origin[2])
+            love.graphics.rectangle("line", x + origin[1], y + origin[2], 200, gui.graphics.text.getHeight())
+        end
+
+        gui.graphics.scissorRect = love.graphics.setScissor
     end
 
     return kraidGUILove

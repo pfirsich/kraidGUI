@@ -9,58 +9,47 @@ function module(gui)
         addTableKeys(set, gui.widgets._defaultParameters)
         if params then addTableKeys(set, params) end
 
-        foreach(set, function(param, value)
+        gui.internal.foreach(set, function(param, value)
             self:setParam(param, value)
         end)
     end
 
-    function Base:update(uiState, child)
+
+    local function callThemeFunction(object, func, ...)
+        if object.theme and object.theme[object.type] and object.theme[object.type][func] then
+            return object.theme[object.type][func](object, ...)
+        end
+    end
+
+    local function withCanvas(self, func)
+        if self.position and self.width and self.height then
+            gui.internal.pushCanvas(self.position[1], self.position[2], self.width, self.height)
+        end
+
+        func()
+
+        if self.position and self.width and self.height then
+            gui.internal.popCanvas()
+        end
+    end
+
+    function Base:update()
         if self.visible and self.enabled then
-            if child ~= true then
-                if self.lastUIState then
-                    local last = self.lastUIState
-                    uiState.mouse.pressed  = uiState.mouse.leftDown and not last.mouse.leftDown
-                    uiState.mouse.released = not uiState.mouse.leftDown and last.mouse.leftDown
-                    uiState.mouse.move = {uiState.mouse.position[1] - last.mouse.position[1], uiState.mouse.position[2] - last.mouse.position[2]}
-                else
-                    self.lastUIState = {mouse = {}}
-                    uiState.mouse.move = {0, 0}
-                end
-                addTableKeys(self.lastUIState.mouse, uiState.mouse)
-                self.lastUIState.mouse.position = {uiState.mouse.position[1], uiState.mouse.position[2]}
-            end
+            withCanvas(self, function()
+                callThemeFunction(self, "update")
 
-            if self.position and self.width and self.height then
-                gui.internal.pushCanvas(self.position[1], self.position[2], self.width, self.height)
-            end
-
-            if self.theme[self.type] and self.theme[self.type].update then
-                self.theme[self.type].update(self, uiState)
-            end
-
-            gui.internal.foreach_array(self.children, function(child)
-                child:update(uiState, true)
-            end, true)
-
-            if self.position and self.width and self.height then
-                gui.internal.popCanvas()
-            end
+                gui.internal.foreach_array(self.children, function(child)
+                    child:update()
+                end, true)
+            end)
         end
     end
 
     function Base:draw()
         if self.visible then
-            if self.position and self.width and self.height then
-                gui.internal.pushCanvas(self.position[1], self.position[2], self.width, self.height)
-            end
-
-            if self.theme[self.type] and self.theme[self.type].draw then
-                self.theme[self.type].draw(self)
-            end
-
-            if self.position and self.width and self.height then
-                gui.internal.popCanvas()
-            end
+            withCanvas(self, function()
+                callThemeFunction(self, "draw")
+            end)
         end
     end
 
@@ -96,6 +85,60 @@ function module(gui)
 
         table.remove(self.parent.children, index)
         self.parent.children[#self.parent.children+1] = self
+    end
+
+    local function mouseEvent(self, name, ...)
+        local args = {...}
+        withCanvas(self, function()
+            local claimed = callThemeFunction(self, name, unpack(args))
+
+            if not claimed then
+                claimed = gui.internal.foreach_array(self.children, function(child)
+                    return child[name](child, unpack(args)) -- will break if true
+                end, true)
+            end
+        end)
+
+        return claimed
+    end
+
+    function Base:mousePressed(x, y, button)
+        if self.hovered then
+            self:toTop()
+            self.clicked = true
+            if self.onClicked then self:onClicked() end
+
+            mouseEvent(self, "mousePressed", x, y, button)
+            return true
+        end
+    end
+
+    function Base:mouseReleased(x, y, button)
+        if self.hovered then
+            self.clicked = false
+            if self.onMouseUp then self:onMouseUp() end
+
+            mouseEvent(self, "mouseReleased", x, y, button)
+            return true
+        end
+    end
+
+    function Base:mouseMove(x, y, dx, dy)
+        local localMouse = gui.internal.toLocal(x, y)
+        local hovered = (self.contains and self.contains(unpack(localMouse))) or
+                        (self.position and self.width and self.height and gui.internal.inRect(localMouse, {self.position[1], self.position[2], self.width, self.height}))
+
+        if not self.hovered and hovered and self.onMouseEnter then
+            self:onMouseEnter() -- TODO: parameters!
+        end
+
+        if self.hovered and not hovered then
+            if self.onMouseExit then self:onMouseExit() end -- TODO: parameters!
+        end
+
+        self.hovered = hovered
+
+        return mouseEvent(self, "mouseMove", x, y, dx, dy)
     end
 
     Base.setters = { -- static

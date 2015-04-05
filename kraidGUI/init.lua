@@ -17,10 +17,9 @@ do
     function foreach_array(table, func, reverse)
         local from, to, step = 1, #table, 1
         if reverse == true then from, to, step = #table, 1, -1 end
-        print("--- ", from, to, step)
+
         for i = from, to, step do
-            print(i)
-            func(table[i])
+            if func(table[i]) then return true end
         end
     end
 
@@ -46,7 +45,10 @@ do
         local stk = gui.internal.canvasStack
         local origin = gui.internal.origin()
         stk[#stk+1] = {x + origin[1], y + origin[2], w, h}
-        gui.graphics.scissorRect(unpack(stk[#stk]))
+        gui.graphics.scissorRect(
+            math.max(stk[#stk-1][1], x + origin[1]), math.max(stk[#stk-1][2], y + origin[2]),
+            math.min(stk[#stk-1][3] - x, w), math.min(stk[#stk-1][4] - y, h)
+        )
     end
 
     function gui.internal.popCanvas()
@@ -64,9 +66,9 @@ do
         return {top[1], top[2]}
     end
 
-    function gui.internal.toLocal(point)
+    function gui.internal.toLocal(x, y)
         local origin = gui.internal.origin()
-        return {point[1] - origin[1], point[2] - origin[2]}
+        return {x - origin[1], y - origin[2]}
     end
 
     function gui.internal.inRect(point, rect) -- rect = {x, y, w, h}
