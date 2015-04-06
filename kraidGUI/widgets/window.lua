@@ -6,7 +6,7 @@ function module(gui)
 
         self.position = {0, 0}
         self.width = 100
-        self.heigh = 100
+        self.height = 100
         self.text = "Window"
         self.closeable = true
         self.resizeable = false

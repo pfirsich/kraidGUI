@@ -8,7 +8,7 @@ function love.load()
 	sceneWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Scene", position = {100, 100}, width = 300, height = 600}
 	subWindowA = gui.widgets.Window{parent = sceneWindow, text = "Child A", position = {150, 100}, width = 200, height = 200}
 	subWindowB = gui.widgets.Window{parent = sceneWindow, text = "Child B", position = {50, 50}, width = 100, height = 100}
-	subBLabel = gui.widgets.Label{parent = subWindowB, text = "Label B2", position = {20, 50}, width = 100, height = 30}
+	subBLabel = gui.widgets.Label{parent = subWindowB, text = "Label B2", position = {20, 50}}
 
 	love.graphics.setBackgroundColor(150, 150, 150)
 end

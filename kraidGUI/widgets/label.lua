@@ -5,7 +5,7 @@ function module(gui)
         self.type = "Label"
 
         self.position = {0, 0}
-        params.text = "Label"
+        self:setText("Label")
 
         gui.widgets.Base.init(self, params)
     end
