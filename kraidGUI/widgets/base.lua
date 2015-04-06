@@ -139,7 +139,9 @@ function module(gui)
 
         self.hovered = hovered
 
-        return mouseEvent(self, "mouseMove", x, y, dx, dy)
+        mouseEvent(self, "mouseMove", x, y, dx, dy)
+
+        return self.hovered -- so the first object that is hovered (the upmost one) will stop all other objects from being hovered
     end
 
     Base.static.setters = { -- static

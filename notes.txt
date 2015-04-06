@@ -15,9 +15,6 @@ Widgets:
 Nachdenken:
 	Koordinatenursprung sollte in Windows unter der Window-Leiste sein
 	
-Bugs:
-	-> Nachdenken: Objekte werden gehovert, obwohl Dinge auf ihnen sind.
-	
 Für Doku merken:
 gui.widgets.setDefault("theme", "dark") um theme zu setzen
 setParam verwenden, wenn möglich oder am Anfang übergeben
