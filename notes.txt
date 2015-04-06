@@ -2,7 +2,8 @@ Widgets:
 	x Windows
 	x Label
 	x Buttons
-	Form-Layouter
+	FormLayout / LineLayout
+		:addLine(oneWidget), :addLine{widgets}
 	Checkbox
 	Category
 	Treeview
@@ -17,37 +18,12 @@ Nachdenken:
 Bugs:
 	-> Nachdenken: Objekte werden gehovert, obwohl Dinge auf ihnen sind.
 	
+Für Doku merken:
+gui.widgets.setDefault("theme", "dark") um theme zu setzen
+setParam verwenden, wenn möglich oder am Anfang übergeben
+widget.enabled nicht vergessen
+
 ----------- Wirre Notizen:
-
-gui = require "kraidGUI"
-
-gui.graphics = {
-	drawRectangle, drawText (API: superprintf), drawImage, drawCircle, drawLine, drawPolygon
-}
-
-gui.widgets.setDefault("theme", "dark")
-gui.widgets.setDefault("padding", 5)
-
--- default are also enabled = true, visible = true (enabled/disabled ~= different styles)
-
-sceneWindow = gui.widgets.Window()
-sceneWindow:setParam("width", 200)
-sceneWindow:setParam("height", 500)
-sceneWindow:setParam("onMove", function(window, dx, dy) print(dx, dy) end)
-
-// If getter/setters are not necessary (sceneWindow.property = value is always okay) then the constructory may take numerous values
-gui.Button{parent = sceneWindow, text = "Kot"}
-
-Kann man auch beides machen, wenn konstruktor automatisch die richtigen aufruft
-
-sceneTreeView = gui.widgets.TreeView(sceneWindow)
-
-..
-
-propertiesWindow = gui.widgets.Window()
-propertiesLayout = gui.widgets.LineLayout() -- this will automatically handle parenting
-propertiesLayout:addLine(oneWidget)
-propertiesLayout:addLine{firstWidgetInLine, secondWidgetInLine}
 
 -- all categories in properties-window:
 function propCategoryCollapse(category, collapsed)
@@ -58,31 +34,4 @@ function propCategoryCollapse(category, collapsed)
 			end
 		end
 	end
-end
-
-general purpose callbacks
-onMouseEnter
-onMouseExit
-onMouseDown
-onClicked -- onMouseDown
-
-
-sceneWindow:draw()
-
-uiState = {
-	mouse = {
-		leftDown,
-		rightDown,
-		mouseWheel = 
-		position = {
-			x =, 
-			y =
-		}
-	}
-}
-
-sceneWindow:update(uiState)
-
-if sceneWindow.hovered == false and propertiesWindow.hovered == false then
-	editor stuff
 end

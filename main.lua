@@ -19,10 +19,6 @@ end
 
 function love.update()
 	sceneModeGUI:update()
-
-	if sceneWindow.hovered == false then
-		gui.graphics.text.draw("IN EDITOR VIEW", 0, 0)
-	end
 end
 
 function love.textinput(text)
@@ -51,4 +47,8 @@ end
 
 function love.draw()
 	sceneModeGUI:draw()
+
+	if sceneWindow.hovered == false then
+		love.graphics.print("IN EDITOR VIEW", 0, 0)
+	end
 end

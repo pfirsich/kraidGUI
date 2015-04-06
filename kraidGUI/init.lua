@@ -108,7 +108,7 @@ do
 
     gui.widgets = {}
     gui.widgets._defaultParameters = {
-        enabled = true, -- this is just a mode of display/interactivity (disabled as in 'greyed-out' - will not be updated)
+        enabled = true, -- this is just a mode of display/interactivity (disabled as in 'greyed-out' - will not be updated) - not implemented in "default"-theme.
         visible = true
     }
 
@@ -118,9 +118,6 @@ do
 
     gui.widgets.setDefault("theme", gui.getTheme("kraidGUI.themes.default"))
 
-    -- Widgets (themes!) should generally call these:
-	-- onMouseEnter, onMouseExit, onMouseUp, onClicked (onMouseDown)
-    -- and subsequently set hovered, clicked
     require("kraidGUI.widgets")(gui)
 
     return gui
