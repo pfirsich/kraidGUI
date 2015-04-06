@@ -8,7 +8,8 @@ function module(gui)
 
     function gui.widgets.helpers.withCanvas(rectWidgetLike, func)
         if rectWidgetLike and rectWidgetLike.position and rectWidgetLike.width and rectWidgetLike.height then
-            gui.internal.pushCanvas(rectWidgetLike.position[1], rectWidgetLike.position[2], rectWidgetLike.width, rectWidgetLike.height)
+            local x, y, w, h = rectWidgetLike.position[1], rectWidgetLike.position[2], rectWidgetLike.width, rectWidgetLike.height
+            gui.internal.pushCanvas(x, y, w, h)
         end
 
         func()
