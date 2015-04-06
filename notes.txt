@@ -1,8 +1,8 @@
-Todo:
+Widgets:
 	x Windows
 	x Label
-	Buttons
-	Grid-Layouter
+	x Buttons
+	Form-Layouter
 	Checkbox
 	Category
 	Treeview
@@ -11,6 +11,12 @@ Todo:
 	Number Box
 	Slider
 
+Nachdenken:
+	Koordinatenursprung sollte in Windows unter der Window-Leiste sein
+	
+Bugs:
+	-> Nachdenken: Objekte werden gehovert, obwohl Dinge auf ihnen sind.
+	
 ----------- Wirre Notizen:
 
 gui = require "kraidGUI"

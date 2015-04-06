@@ -6,7 +6,7 @@ function module(gui)
 		border = {45, 45, 45},
 		text = {255, 255, 255},
 		object = {100, 100, 100},
-		objectHighlight = {140, 100, 100},
+		objectHighlight = {180, 180, 180},
 		marked = {205, 0, 0},
 	}
 
@@ -23,7 +23,7 @@ function module(gui)
 	--------------------------------------------------------------------
 	--------------------------------------------------------------------
 	theme.Window = {}
-	theme.Window.titleBarBorder = 2
+	theme.Window.titleBarBorder = 0
 	theme.Window.titleOffsetX = 5
 	theme.Window.titleBarHeight = 25
 
@@ -77,6 +77,23 @@ function module(gui)
 	function theme.Label.draw(self)
 		gui.graphics.setColor(theme.colors.text)
 		gui.graphics.text.draw(self.text, 0, 0)
+	end
+
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+	theme.Button = {}
+
+	function theme.Button.draw(self)
+		local bg = self.clicked and theme.colors.objectHighlight or (self.hovered and theme.colors.object or theme.colors.border)
+		local border = self.clicked and theme.colors.border or theme.colors.objectHighlight
+
+		gui.graphics.setColor(bg)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+		gui.graphics.setColor(border)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height, 2)
+
+		gui.graphics.setColor(theme.colors.text)
+		gui.graphics.text.draw(self.text, self.width/2 - gui.graphics.text.getWidth(self.text)/2, self.height/2 - gui.graphics.text.getHeight()/2)
 	end
 
 	return theme

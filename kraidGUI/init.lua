@@ -57,7 +57,7 @@ do
         local stk = gui.internal.canvasStack
         local origin = gui.internal.origin()
 
-        local sx, sy = math.max(origin[1], x + origin[1]), math.max(origin[1], y + origin[2])
+        local sx, sy = math.max(stk[#stk].scissor[1], x + origin[1]), math.max(stk[#stk].scissor[2], y + origin[2])
         local sw, sh = math.min(math.max(0, stk[#stk].scissor[3] - x), w), math.min(math.max(0, stk[#stk].scissor[4] - y), h)
         stk[#stk+1] = {origin = {x + origin[1], y + origin[2]}, scissor = {sx, sy, sw, sh}}
 

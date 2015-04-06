@@ -5,8 +5,12 @@ function love.load()
 	loveBackend.init(gui)
 
 	sceneModeGUI = gui.widgets.Base()
+
 	sceneWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Scene", position = {100, 100}, width = 300, height = 600}
+
 	subWindowA = gui.widgets.Window{parent = sceneWindow, text = "Child A", position = {150, 100}, width = 200, height = 200}
+	subAButton = gui.widgets.Button{parent = subWindowA, text = "Button A", position = {5, 30}, width = 190, height = 50, onMouseUp = function(button) print("KLICK") end}
+
 	subWindowB = gui.widgets.Window{parent = sceneWindow, text = "Child B", position = {50, 50}, width = 100, height = 100}
 	subBLabel = gui.widgets.Label{parent = subWindowB, text = "Label B2", position = {20, 50}}
 

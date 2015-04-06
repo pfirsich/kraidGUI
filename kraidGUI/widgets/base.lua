@@ -134,6 +134,7 @@ function module(gui)
 
         if self.hovered and not hovered then
             if self.onMouseExit then self:onMouseExit() end -- TODO: parameters!
+            self.clicked = false
         end
 
         self.hovered = hovered
