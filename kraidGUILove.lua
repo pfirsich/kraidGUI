@@ -44,7 +44,6 @@ do
         function gui.graphics.text.draw(text, x, y)
             local origin = gui.internal.origin()
             love.graphics.print(text, x + origin[1], y + origin[2])
-            love.graphics.rectangle("line", x + origin[1], y + origin[2], 200, gui.graphics.text.getHeight())
         end
 
         gui.graphics.scissorRect = love.graphics.setScissor

@@ -54,8 +54,8 @@ function module(gui)
     end
 
     function Base:setParam(name, value)
-        if self.setters[name] then
-            self.setters[name](self, value)
+        if self.static.setters[name] then
+            self.static.setters[name](self, value)
         else
             self[name] = value
         end
@@ -141,7 +141,7 @@ function module(gui)
         return mouseEvent(self, "mouseMove", x, y, dx, dy)
     end
 
-    Base.setters = { -- static
+    Base.static.setters = { -- static
         ["parent"] = Base.setParent
     }
 

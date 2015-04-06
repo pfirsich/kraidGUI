@@ -8,6 +8,18 @@ do
         end
     end
 
+    function tableDeepCopy(tbl)
+        local ret = {}
+        for k, v in pairs(tbl) do
+            if type(tbl[k]) == "table" then
+                ret[k] = tableDeepCopy(tbl[k])
+            else
+                ret[k] = tbl[k]
+            end
+        end
+        return ret
+    end
+
     function foreach(table, func)
         for k, v in pairs(table) do
             func(k, v)
@@ -45,10 +57,10 @@ do
         local stk = gui.internal.canvasStack
         local origin = gui.internal.origin()
         stk[#stk+1] = {x + origin[1], y + origin[2], w, h}
-        gui.graphics.scissorRect(
-            math.max(stk[#stk-1][1], x + origin[1]), math.max(stk[#stk-1][2], y + origin[2]),
-            math.min(stk[#stk-1][3] - x, w), math.min(stk[#stk-1][4] - y, h)
-        )
+
+        local sx, sy = math.max(stk[#stk-1][1], x + origin[1]), math.max(stk[#stk-1][2], y + origin[2])
+        local sw, sh = math.min(math.max(0, stk[#stk-1][3] - x), w), math.min(math.max(0, stk[#stk-1][4] - y), h)
+        gui.graphics.scissorRect(sx, sy, sw, sh)
     end
 
     function gui.internal.popCanvas()
@@ -78,6 +90,7 @@ do
     function gui.internal.class(base)
         local cls = {}
         cls.__index = cls
+        cls.static = base and tableDeepCopy(base.static) or {}
 
         return setmetatable(cls, {
             __index = base,

@@ -59,15 +59,25 @@ function module(gui)
 		end)
 
 		gui.graphics.setColor(theme.colors.border)
-		gui.graphics.drawRectangle(		theme.Window.titleBarBorder, theme.Window.titleBarBorder,
-										self.width - theme.Window.titleBarBorder * 2,
-										theme.Window.titleBarHeight - theme.Window.titleBarBorder * 2)
+		gui.graphics.drawRectangle(	theme.Window.titleBarBorder, theme.Window.titleBarBorder,
+									self.width - theme.Window.titleBarBorder * 2,
+									theme.Window.titleBarHeight - theme.Window.titleBarBorder * 2)
 
 		gui.graphics.setColor(theme.colors.text)
-		gui.graphics.text.draw(self.text, theme.Window.titleOffsetX, theme.Window.titleBarBorder/2 - gui.graphics.text.getHeight()/2)
+		gui.graphics.text.draw(self.text, theme.Window.titleOffsetX, theme.Window.titleBarHeight/2 - gui.graphics.text.getHeight()/2)
 
 		gui.graphics.setColor(theme.colors.border)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, 2)
+	end
+
+
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+	theme.Label = {}
+	function theme.Label.draw(self)
+		gui.graphics.setColor(theme.colors.text)
+		gui.graphics.text.draw(self.text, 0, 0)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height, 1)
 	end
 
 	return theme

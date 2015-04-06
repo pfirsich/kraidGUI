@@ -1,8 +1,7 @@
 function module(gui)
     local Window = gui.internal.class(gui.widgets.Base)
 
-
-    function Window:init(...)
+    function Window:init(params)
         self.type = "Window"
 
         self.position = {0, 0}
@@ -12,11 +11,8 @@ function module(gui)
         self.closeable = true
         self.resizeable = false
 
-        gui.widgets.Base.init(self, ...)
+        gui.widgets.Base.init(self, params)
     end
-
-    -- function setterForVal
-    -- Window.setters["myval"] = settterForVal
 
     return Window
 end

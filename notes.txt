@@ -1,6 +1,17 @@
+Todo:
+	Windows
+	Label
+	Buttons
+	Checkbox
+	Grid-Layouter
+	Category
+	Treeview
+	Radio Buttons
+	Input Field
+	Number Box
+	Slider
 
-
------------
+----------- Wirre Notizen:
 
 gui = require "kraidGUI"
 
