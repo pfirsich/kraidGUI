@@ -6,8 +6,8 @@ function module(gui)
         self.children = {}
 
         local set = {}
-        addTableKeys(set, gui.widgets._defaultParameters)
-        if params then addTableKeys(set, params) end
+        gui.internal.addTableKeys(set, gui.widgets._defaultParameters)
+        if params then gui.internal.addTableKeys(set, params) end
 
         gui.internal.foreach(set, function(param, value)
             self:setParam(param, value)

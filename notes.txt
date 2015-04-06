@@ -6,8 +6,7 @@ Widgets:
 	x Label
 	x Buttons
 	x Checkbox
-	FormLayout / LineLayout
-		:addLine(oneWidget), :addLine{widgets}
+	x FormLayout / LineLayout
 	Category
 	Treeview
 	Radio Buttons
@@ -16,10 +15,6 @@ Widgets:
 	Slider
 
 Nachdenken:
-	Koordinatenursprung sollte in Windows unter der Window-Leiste sein
-	withCanvas zum helper machen, der auch prüft ob self überhaupt gesetzt ist und dann withCanvas(childCanvas) machen, wobei childCanvas, wie ein widget position, width, height hat
-		withCanvas(rectLike, func, ...)
-	Alternativ kann man das einfach lassen und beim Layouter einfach top-paddings und so angeben
 		
 Bugs:
 	

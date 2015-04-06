@@ -21,8 +21,6 @@ function module(gui)
         gui.widgets.Base.init(self, params)
         gui.widgets.helpers.callThemeFunction(self, "init")
 
-        print(self.closeable)
-
         -- set parent now that everything is set up (closeable is changed by Base.init)
         self.closeButton:setParam("parent", self)
         self.closeButton:setParam("visible", self.closeable)
