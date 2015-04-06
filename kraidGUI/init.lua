@@ -51,6 +51,7 @@ do
     gui.internal.canvasStack = {{origin = {0,0}, scissor = {0,0,100000,100000}}}
     gui.internal.foreach = foreach
     gui.internal.foreach_array = foreach_array
+    gui.internal.tableDeepCopy = tableDeepCopy
 
     -- relative to last scissor origin
     function gui.internal.pushCanvas(x, y, w, h)
@@ -113,7 +114,8 @@ do
     gui.widgets = {}
     gui.widgets._defaultParameters = {
         enabled = true, -- this is just a mode of display/interactivity (disabled as in 'greyed-out' - will not be updated) - not implemented in "default"-theme.
-        visible = true
+        visible = true,
+        virtual = false -- will only be updated, but not drawn
     }
 
     function gui.widgets.setDefault(name, value)

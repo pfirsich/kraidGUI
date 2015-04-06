@@ -10,7 +10,7 @@ function module(gui)
         self.checked = true
 
         gui.widgets.Base.init(self, params)
-        print(self.onCheck)
+        gui.widgets.helpers.callThemeFunction(self, "init")
     end
 
     function Checkbox:onClicked()

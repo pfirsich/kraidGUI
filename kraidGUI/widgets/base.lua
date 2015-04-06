@@ -14,29 +14,10 @@ function module(gui)
         end)
     end
 
-
-    local function callThemeFunction(object, func, ...)
-        if object.theme and object.theme[object.type] and object.theme[object.type][func] then
-            return object.theme[object.type][func](object, ...)
-        end
-    end
-
-    local function withCanvas(self, func)
-        if self.position and self.width and self.height then
-            gui.internal.pushCanvas(self.position[1], self.position[2], self.width, self.height)
-        end
-
-        func()
-
-        if self.position and self.width and self.height then
-            gui.internal.popCanvas()
-        end
-    end
-
     function Base:update()
         if self.visible and self.enabled then
-            withCanvas(self, function()
-                callThemeFunction(self, "update")
+            gui.widgets.helpers.withCanvas(self, function()
+                gui.widgets.helpers.callThemeFunction(self, "update")
 
                 gui.internal.foreach_array(self.children, function(child)
                     child:update()
@@ -46,9 +27,9 @@ function module(gui)
     end
 
     function Base:draw()
-        if self.visible then
-            withCanvas(self, function()
-                callThemeFunction(self, "draw")
+        if self.visible and not self.virtual then
+            gui.widgets.helpers.withCanvas(self, function()
+                gui.widgets.helpers.callThemeFunction(self, "draw")
             end)
         end
     end
@@ -89,8 +70,8 @@ function module(gui)
 
     local function mouseEvent(self, name, ...)
         local args = {...}
-        withCanvas(self, function()
-            local claimed = callThemeFunction(self, name, unpack(args))
+        gui.widgets.helpers.withCanvas(self, function()
+            local claimed = gui.widgets.helpers.callThemeFunction(self, name, unpack(args))
 
             if not claimed then
                 claimed = gui.internal.foreach_array(self.children, function(child)
@@ -103,45 +84,58 @@ function module(gui)
     end
 
     function Base:mousePressed(x, y, button)
-        if self.hovered then
-            self:toTop()
-            self.clicked = true
-            if self.onClicked then self:onClicked() end
+        if self.visible and self.enabled then
+            if self.hovered then
+                self:toTop()
+                self.clicked = true
+                if self.onClicked then self:onClicked() end
+            end
 
-            mouseEvent(self, "mousePressed", x, y, button)
-            return true
+            -- these are taken apart and the check is added, so Base-Widgets without position/dimensions will still pass the events to their children
+            if self.hovered or not (self.position and self.width and self.height) then
+                mouseEvent(self, "mousePressed", x, y, button)
+            end
+
+            return self.hovered
         end
     end
 
     function Base:mouseReleased(x, y, button)
-        if self.hovered then
-            self.clicked = false
-            if self.onMouseUp then self:onMouseUp() end
+        if self.visible and self.enabled then
+            if self.hovered then
+                self.clicked = false
+                if self.onMouseUp then self:onMouseUp() end
+            end
 
-            mouseEvent(self, "mouseReleased", x, y, button)
-            return true
+            if self.hovered or not (self.position and self.width and self.height) then
+                mouseEvent(self, "mouseReleased", x, y, button)
+            end
+
+            return self.hovered
         end
     end
 
     function Base:mouseMove(x, y, dx, dy)
-        local localMouse = gui.internal.toLocal(x, y)
-        local hovered = (self.contains and self.contains(unpack(localMouse))) or
-                        (self.position and self.width and self.height and gui.internal.inRect(localMouse, {self.position[1], self.position[2], self.width, self.height}))
+        if self.visible and self.enabled then
+            local localMouse = gui.internal.toLocal(x, y)
+            local hovered = (self.contains and self.contains(unpack(localMouse))) or
+                            (self.position and self.width and self.height and gui.internal.inRect(localMouse, {self.position[1], self.position[2], self.width, self.height}))
 
-        if not self.hovered and hovered and self.onMouseEnter then
-            self:onMouseEnter() -- TODO: parameters!
+            if not self.hovered and hovered and self.onMouseEnter then
+                self:onMouseEnter() -- TODO: parameters!
+            end
+
+            if self.hovered and not hovered then
+                if self.onMouseExit then self:onMouseExit() end -- TODO: parameters!
+                self.clicked = false
+            end
+
+            self.hovered = hovered
+
+            mouseEvent(self, "mouseMove", x, y, dx, dy)
+
+            return self.hovered -- so the first object that is hovered (the upmost one) will stop all other objects from being hovered
         end
-
-        if self.hovered and not hovered then
-            if self.onMouseExit then self:onMouseExit() end -- TODO: parameters!
-            self.clicked = false
-        end
-
-        self.hovered = hovered
-
-        mouseEvent(self, "mouseMove", x, y, dx, dy)
-
-        return self.hovered -- so the first object that is hovered (the upmost one) will stop all other objects from being hovered
     end
 
     Base.static.setters = { -- static

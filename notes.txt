@@ -1,7 +1,8 @@
 Widgets:
 	x Windows
 		Window-Resizing + Event
-		Window-Closing + Event
+			Nur Diagonal! (Ha! easier!) - vllt. mit kleiner Box unten rechts?
+		x Window-Closing + Event
 	x Label
 	x Buttons
 	x Checkbox
@@ -16,7 +17,12 @@ Widgets:
 
 Nachdenken:
 	Koordinatenursprung sollte in Windows unter der Window-Leiste sein
-	Man kann nicht einfach einen Button erstellen, der anders aussieht als ein normaler Button (z.B. für Fenster-Schließereien), man muss ein komplett neues theme machen
+	withCanvas zum helper machen, der auch prüft ob self überhaupt gesetzt ist und dann withCanvas(childCanvas) machen, wobei childCanvas, wie ein widget position, width, height hat
+		withCanvas(rectLike, func, ...)
+	Alternativ kann man das einfach lassen und beim Layouter einfach top-paddings und so angeben
+		
+Bugs:
+	
 	
 Für Doku merken:
 gui.widgets.setDefault("theme", "dark") um theme zu setzen

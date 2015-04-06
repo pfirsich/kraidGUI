@@ -12,8 +12,10 @@ do
             love.graphics.push()
             love.graphics.translate(unpack(gui.internal.origin()))
             if lineWidth then
-                love.graphics.setLineWidth(lineWidth)
-                func("line", ...)
+                if lineWidth > 0 then
+                    love.graphics.setLineWidth(lineWidth)
+                    func("line", ...)
+                end
             else
                 func("fill", ...)
             end

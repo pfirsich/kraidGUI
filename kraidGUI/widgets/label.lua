@@ -8,6 +8,7 @@ function module(gui)
         self:setText("Label")
 
         gui.widgets.Base.init(self, params)
+        gui.widgets.helpers.callThemeFunction(self, "init")
     end
 
     function Label:setText(text)

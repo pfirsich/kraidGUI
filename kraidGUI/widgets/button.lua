@@ -9,6 +9,7 @@ function module(gui)
         self.height = 20
 
         gui.widgets.Base.init(self, params)
+        gui.widgets.helpers.callThemeFunction(self, "init")
     end
 
     return Button
