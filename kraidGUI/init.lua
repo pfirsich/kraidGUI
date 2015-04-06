@@ -48,7 +48,7 @@ do
     ------------------------------------
 
     gui.internal = {}
-    gui.internal.canvasStack = {{0,0,100000,100000}}
+    gui.internal.canvasStack = {{origin = {0,0}, scissor = {0,0,100000,100000}}}
     gui.internal.foreach = foreach
     gui.internal.foreach_array = foreach_array
 
@@ -56,11 +56,12 @@ do
     function gui.internal.pushCanvas(x, y, w, h)
         local stk = gui.internal.canvasStack
         local origin = gui.internal.origin()
-        stk[#stk+1] = {x + origin[1], y + origin[2], w, h}
 
-        local sx, sy = math.max(stk[#stk-1][1], x + origin[1]), math.max(stk[#stk-1][2], y + origin[2])
-        local sw, sh = math.min(math.max(0, stk[#stk-1][3] - x), w), math.min(math.max(0, stk[#stk-1][4] - y), h)
-        gui.graphics.scissorRect(sx, sy, sw, sh)
+        local sx, sy = math.max(origin[1], x + origin[1]), math.max(origin[1], y + origin[2])
+        local sw, sh = math.min(math.max(0, stk[#stk].scissor[3] - x), w), math.min(math.max(0, stk[#stk].scissor[4] - y), h)
+        stk[#stk+1] = {origin = {x + origin[1], y + origin[2]}, scissor = {sx, sy, sw, sh}}
+
+        gui.graphics.scissorRect(unpack(stk[#stk].scissor))
     end
 
     function gui.internal.popCanvas()
@@ -69,13 +70,12 @@ do
             error("origin popped more than pushed")
         else
             stk[#stk] = nil
-            gui.graphics.scissorRect(unpack(stk[#stk]))
+            gui.graphics.scissorRect(unpack(stk[#stk].scissor))
         end
     end
 
     function gui.internal.origin()
-        local top = gui.internal.canvasStack[#gui.internal.canvasStack]
-        return {top[1], top[2]}
+        return gui.internal.canvasStack[#gui.internal.canvasStack].origin
     end
 
     function gui.internal.toLocal(x, y)
@@ -117,7 +117,6 @@ do
     end
 
     gui.widgets.setDefault("theme", gui.getTheme("kraidGUI.themes.default"))
-    gui.widgets.setDefault("padding", 5)
 
     -- Widgets (themes!) should generally call these:
 	-- onMouseEnter, onMouseExit, onMouseUp, onClicked (onMouseDown)

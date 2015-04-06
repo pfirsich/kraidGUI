@@ -77,7 +77,6 @@ function module(gui)
 	function theme.Label.draw(self)
 		gui.graphics.setColor(theme.colors.text)
 		gui.graphics.text.draw(self.text, 0, 0)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, 1)
 	end
 
 	return theme

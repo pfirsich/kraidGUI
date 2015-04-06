@@ -1,23 +1,15 @@
 Todo:
-	Windows
-	Label
+	x Windows
+	x Label
 	Buttons
-	Checkbox
 	Grid-Layouter
+	Checkbox
 	Category
 	Treeview
 	Radio Buttons
 	Input Field
 	Number Box
 	Slider
-	
-Bugs:
-	scissoring funktioniert nicht richtig bei:
-		Fenster Root
-			Fenster A 
-			Fenster B
-				LLabel
-		für Fenster B für alle Sachen, die nach den Children (Label) gerendert werden
 
 ----------- Wirre Notizen:
 
