@@ -24,10 +24,13 @@ function module(gui)
 	--------------------------------------------------------------------
 	--------------------------------------------------------------------
 	theme.Window = {}
+
 	theme.Window.titleBarBorder = 0
 	theme.Window.titleOffsetX = 5
 	theme.Window.titleBarHeight = 25
+
 	theme.Window.borderWidth = 2
+	theme.Window.resizeHandleSize = 15
 
 	theme.Window.closeButtonWidth = 20
 	theme.Window.closeButtonHeight = 8
@@ -57,13 +60,24 @@ function module(gui)
 	function theme.Window.mouseMove(self, x, y, dx, dy)
 		if self.dragged then
 			self.position = {self.position[1] + dx, self.position[2] + dy}
-			if self.onMove then self:onMove(unpack(self.position)) end
+			if self.onMove then self:onMove() end
+			return true
+		end
+
+		if self.resized then
+			self.width = self.width + dx
+			self.height = self.height + dy
+			if self.onResize then self:onResize() end
+			self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, self.theme.Window.closeButtonPosY})
 			return true
 		end
 	end
 
 	function theme.Window.mouseReleased(self, x, y, button)
-		if button == "l" then self.dragged = false end
+		if button == "l" then
+			self.resized = false
+			self.dragged = false
+		end
 	end
 
 	function theme.Window.mousePressed(self, x, y, button)
@@ -72,6 +86,12 @@ function module(gui)
 
 			if gui.internal.inRect(localMouse, {0, 0, self.width, self.theme.Window.titleBarHeight}) then
 				self.dragged = true
+				return true
+			end
+
+			local fromCorner = {self.width - localMouse[1], self.height - localMouse[2]}
+			if fromCorner[1] > 0 and fromCorner[2] > 0 and fromCorner[1] + fromCorner[2] < self.theme.Window.resizeHandleSize then
+				self.resized = true
 				return true
 			end
 		end
@@ -95,6 +115,9 @@ function module(gui)
 
 		gui.graphics.setColor(self.theme.colors.border)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Window.borderWidth)
+		gui.graphics.drawPolygon({	self.width - self.theme.Window.resizeHandleSize, self.height,
+									self.width, self.height,
+									self.width, self.height - theme.Window.resizeHandleSize})
 
 		if self.closeButton.visible then
 			gui.widgets.helpers.withCanvas(self.closeButton, function()

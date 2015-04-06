@@ -1,7 +1,7 @@
 Widgets:
 	x Windows
-		Window-Resizing + Event
-			Nur Diagonal! (Ha! easier!) - vllt. mit kleiner Box unten rechts?
+		x Window-Resizing + Event
+			Nur Diagonal! - vllt. mit kleiner Box unten rechts?
 		x Window-Closing + Event
 	x Label
 	x Buttons
