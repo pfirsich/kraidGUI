@@ -96,6 +96,28 @@ function module(gui)
 		gui.graphics.text.draw(self.text, self.width/2 - gui.graphics.text.getWidth(self.text)/2, self.height/2 - gui.graphics.text.getHeight()/2)
 	end
 
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+
+	theme.Checkbox = {}
+
+	theme.Checkbox.checkSizeFactor = 0.6
+
+	function theme.Checkbox.draw(self)
+		gui.graphics.setColor(theme.colors.object)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+		gui.graphics.setColor(theme.colors.border)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height, 2)
+
+		local w, h = self.width * theme.Checkbox.checkSizeFactor, self.height * theme.Checkbox.checkSizeFactor
+		local x, y = self.width/2 - w/2, self.height/2 - h/2
+
+		if self.hovered then gui.graphics.drawRectangle(x, y, w, h, 2) end
+
+		gui.graphics.setColor(theme.colors.marked)
+		if self.checked then gui.graphics.drawRectangle(x, y, w, h) end
+	end
+
 	return theme
 end
 

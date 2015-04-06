@@ -74,6 +74,10 @@ do
         end
     end
 
+    function gui.internal.topCanvas()
+        return gui.internal.canvasStack[#gui.internal.canvasStack]
+    end
+
     function gui.internal.origin()
         return gui.internal.canvasStack[#gui.internal.canvasStack].origin
     end

@@ -1,10 +1,12 @@
 Widgets:
 	x Windows
+		Window-Resizing + Event
+		Window-Closing + Event
 	x Label
 	x Buttons
+	x Checkbox
 	FormLayout / LineLayout
 		:addLine(oneWidget), :addLine{widgets}
-	Checkbox
 	Category
 	Treeview
 	Radio Buttons
@@ -14,6 +16,7 @@ Widgets:
 
 Nachdenken:
 	Koordinatenursprung sollte in Windows unter der Window-Leiste sein
+	Man kann nicht einfach einen Button erstellen, der anders aussieht als ein normaler Button (z.B. für Fenster-Schließereien), man muss ein komplett neues theme machen
 	
 Für Doku merken:
 gui.widgets.setDefault("theme", "dark") um theme zu setzen
