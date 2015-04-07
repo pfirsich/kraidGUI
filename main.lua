@@ -10,6 +10,18 @@ function onCheck_checkboxA(checkbox)
 	subWindowB:setParam("visible", checkbox.checked)
 end
 
+function propCategoryCollapse(category)
+	if not category.collapsed then
+		for _, child in ipairs(category.parent.children) do
+			if child ~= category and child.type == "Category" then
+				child:setParam("collapsed", true)
+			end
+		end
+	end
+	categoryLayout:arrange()
+	propertiesLayout:arrange()
+end
+
 function love.load()
 	loveBackend.init(gui)
 
@@ -26,20 +38,23 @@ function love.load()
 
 	propertiesWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Properties", position = {700, 200}, width = 350, height = 600, closeable = false}
 
-	hiddenCheckboxLabel = gui.widgets.Label{parent = propertiesWindow, text = "hidden"}
-	hiddenCheckbox = gui.widgets.Checkbox{parent = propertiesWindow}
-	enabledCheckboxLabel = gui.widgets.Label{parent = propertiesWindow, text = "enabled"}
-	enabledCheckbox = gui.widgets.Checkbox{parent = propertiesWindow}
-	loadButton = gui.widgets.Button{parent = propertiesWindow, text = "Load", height = 30, minWidth = 50}
-	saveButton = gui.widgets.Button{parent = propertiesWindow, text = "Save", height = 30, minWidth = 50}
-	saveAsButton = gui.widgets.Button{parent = propertiesWindow, text = "Save As..", height = 30, minWidth = 50}
+	categoryA = gui.widgets.Category{parent = propertiesWindow, text = "Category A", minWidth = 50, inflatedHeight = 200, onCollapse = propCategoryCollapse}
+	categoryB = gui.widgets.Category{parent = propertiesWindow, text = "Category B", minWidth = 50, inflatedHeight = 250, onCollapse = propCategoryCollapse}
+	categoryLayout = gui.layouts.LineLayout(propertiesWindow, {["spacing"] = 5, ["padding"] = 5, ["padding-top"] = 30})
+	categoryLayout:newLine()
+	categoryLayout:addWidget(categoryA)
+	categoryLayout:newLine()
+	categoryLayout:addWidget(categoryB)
 
-	propertiesLayout = gui.layouts.LineLayout(propertiesWindow)
-	propertiesWindow:setParam("onResize", function(window) propertiesLayout:arrange() end)
+	hiddenCheckboxLabel = gui.widgets.Label{parent = categoryA, text = "hidden"}
+	hiddenCheckbox = gui.widgets.Checkbox{parent = categoryA}
+	enabledCheckboxLabel = gui.widgets.Label{parent = categoryA, text = "enabled"}
+	enabledCheckbox = gui.widgets.Checkbox{parent = categoryA}
+	loadButton = gui.widgets.Button{parent = categoryA, text = "Load", height = 30, minWidth = 50}
+	saveButton = gui.widgets.Button{parent = categoryA, text = "Save", height = 30, minWidth = 50}
+	saveAsButton = gui.widgets.Button{parent = categoryA, text = "Save As..", height = 30, minWidth = 50}
 
-	propertiesLayout:setParam("padding", 5)
-	propertiesLayout:setParam("padding-top", 30)
-	propertiesLayout:setParam("spacing", 5)
+	propertiesLayout = gui.layouts.LineLayout(categoryA, {["spacing"] = 5, ["padding"] = 10, ["padding-top"] = 40})
 
 	propertiesLayout:newLine()
 	propertiesLayout:addWidget(hiddenCheckbox)
@@ -56,7 +71,10 @@ function love.load()
 	propertiesLayout:addWidget(saveButton)
 	propertiesLayout:addWidget(saveAsButton)
 
-	propertiesLayout:arrange()
+
+	categoryB:setParam("collapsed", false)
+	propertiesWindow:setParam("onResize", function(window) categoryLayout:arrange(); propertiesLayout:arrange() end)
+	propertiesWindow:onResize()
 
 	love.graphics.setBackgroundColor(150, 150, 150)
 end

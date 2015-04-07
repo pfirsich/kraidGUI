@@ -178,6 +178,40 @@ function module(gui)
 		if self.checked then gui.graphics.drawRectangle(x, y, w, h) end
 	end
 
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+
+	theme.Category = {}
+
+	theme.Category.borderThickness = 5
+	theme.Category.textMarginLeft = 5
+
+	function theme.Category.mousePressed(self, x, y, button)
+		if button == "l" then
+			local localMouse = gui.internal.toLocal(x, y)
+			if localMouse[2] < self.collapsedHeight then
+				self:setCollapsed(not self.collapsed)
+			end
+		end
+	end
+
+	function theme.Category.draw(self)
+		gui.graphics.setColor(self.collapsed and self.theme.colors.object or self.theme.colors.objectHighlight)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+		gui.graphics.setColor(self.theme.colors.text)
+		gui.graphics.text.draw(self.text, theme.Category.textMarginLeft, self.collapsedHeight/2 - gui.graphics.text.getHeight()/2)
+
+		if not self.collapsed then
+			gui.graphics.setColor(self.theme.colors.background)
+			gui.graphics.drawRectangle(	self.theme.Category.borderThickness, self.collapsedHeight + self.theme.Category.borderThickness,
+										self.width - self.theme.Category.borderThickness*2, self.height - self.collapsedHeight - self.theme.Category.borderThickness*2)
+
+			gui.internal.foreach_array(self.children, function(child)
+				child:draw()
+			end)
+		end
+	end
+
 	return theme
 end
 

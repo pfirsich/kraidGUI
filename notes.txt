@@ -7,35 +7,30 @@ Widgets:
 	x Buttons
 	x Checkbox
 	x FormLayout / LineLayout
-	Category
-	Treeview
+	x Category
 	Radio Buttons
+	Treeview
 	Input Field
 	Number Box
+		Input Field + 2 Buttons
 	Slider
 
 Nachdenken:
 	Drop-Downs?...Oder Number-Wheels?
-		-> Wie kann man Widgets bauen, die auf allem gezeichnet werden und nicht von einem Canvas beschränkt werden?
-		Es ist einfach widgets widgets ein "breakout"-Attribut zu geben, dass an pushCanvas weitergegeben wird und dann beim scissor-canvas den 0, 0, 100000, 100000 stattdessen pusht, aber es bleibt das Problem der Renderreihenfolge bestehen. Fensterränder werden weiterhin über diesen Widgets gezeichnet.
-			
+		-> Wie kann man Widgets bauen, die auf allem gezeichnet werden und nicht von einem Canvas beschrÃ¤nkt werden?
+		Es ist einfach widgets widgets ein "breakout"-Attribut zu geben, dass an pushCanvas weitergegeben wird und dann beim
+		scissor-canvas den 0, 0, 100000, 100000 stattdessen pusht, aber es bleibt das Problem der Renderreihenfolge bestehen.
+		FensterrÃ¤nder werden weiterhin Ã¼ber diesen Widgets gezeichnet.
+
 Bugs:
-	
-	
-Für Doku merken:
-gui.widgets.setDefault("theme", "dark") um theme zu setzen
-setParam verwenden, wenn möglich oder am Anfang übergeben
-widget.enabled nicht vergessen
+	pass
+
+FÃ¼r Doku merken:
+	gui.widgets.setDefault("theme", "dark") um theme zu setzen
+	setParam verwenden, wenn mÃ¶glich oder am Anfang Ã¼bergeben
+	widget.enabled nicht vergessen
+	Bei der Parameterliste am Anfang kann man nie wissen in welcher Reihenfolge die gesetzt werden (wegen pairs()).
+	Man darf also nur Dinger setzen, die unabhÃ¤ngig voneinander sind. Ansonsten braucht man mehrere calls zu setParam.
 
 ----------- Wirre Notizen:
-
--- all categories in properties-window:
-function propCategoryCollapse(category, collapsed)
-	if not collapsed then
-		for child in ipairs(category.parent.children) do
-			if child.type == "Category" then
-				child:collapse(true)
-			end
-		end
-	end
-end
+	pass

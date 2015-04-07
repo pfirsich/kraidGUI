@@ -3,13 +3,17 @@ do
         -- TODO: Vertical resizing?
         local LineLayout = gui.internal.class()
 
-        function LineLayout:init(parent)
+        function LineLayout:init(parent, params)
             self.lines = {}
             self.parent = parent
             self.defaultParameters = {
                 ["padding"] = 5,
                 ["spacing"] = 5,
             }
+
+            for k, v in pairs(params) do
+                self.defaultParameters[k] = v
+            end
         end
 
         function LineLayout:setParam(parameter, value)
