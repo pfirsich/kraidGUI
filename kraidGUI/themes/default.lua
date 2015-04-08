@@ -221,8 +221,7 @@ function module(gui)
 
 	function theme.Category.onMouseDown(self, x, y, button)
 		if button == "l" then
-			local localMouse = gui.internal.toLocal(x, y)
-			if localMouse[2] < self.collapsedHeight then
+			if y < self.collapsedHeight then
 				self:setCollapsed(not self.collapsed)
 			end
 		end
