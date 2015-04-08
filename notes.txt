@@ -1,6 +1,5 @@
 Todo:
-	Fix window dragging. Somehow make it special?
-	Fix onMouseLeave (so it will be called, when another widgets takes the 'hovership')
+	
 
 Widgets:
 	x Windows
@@ -23,6 +22,9 @@ Widgets:
 Nachdenken:
 	onResize für alle Widgets? Viele müssen Sachen tun, wenn die resized werden
 		Kinder resizen
+	Window-dragging ist scheiße. Was soll man da tun?
+		eventuell einfach immer an alle mouseMove schicken.
+		hovered und onMouseEnter und onMouseLeave sind dann separat
 
 Bugs:
 	pass

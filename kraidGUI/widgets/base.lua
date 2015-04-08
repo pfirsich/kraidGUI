@@ -19,6 +19,17 @@ function module(gui)
             gui.widgets.helpers.withCanvas(self, function()
                 gui.widgets.helpers.callThemeFunction(self, "update")
 
+                if not self.hovered and gui.widgets.hovered == self and self.onMouseEnter then
+                    self:onMouseEnter() -- TODO: parameters!
+                end
+
+                if self.hovered and not gui.widgets.hovered == self then
+                    if self.onMouseExit then self:onMouseExit() end -- TODO: parameters!
+                    self.clicked = false
+                end
+
+                self.hovered = gui.widgets.hovered == self
+
                 gui.internal.foreach_array(self.children, function(child)
                     child:update()
                 end, true)
@@ -125,17 +136,8 @@ function module(gui)
             local hovered = (self.contains and self:contains(unpack(localMouse))) or
                             (self.position and self.width and self.height and gui.internal.inRect(localMouse, {0, 0, self.width, self.height}))
 
-            if not self.hovered and hovered and self.onMouseEnter then
-                self:onMouseEnter() -- TODO: parameters!
-            end
-
-            if self.hovered and not hovered then
-                if self.onMouseExit then self:onMouseExit() end -- TODO: parameters!
-                self.clicked = false
-            end
-
-            self.hovered = hovered
-            if self.hovered then
+            if hovered then
+                gui.widgets.hovered = self
                 gui.widgets.helpers.callThemeFunction(self, "mouseMove", x, y, dx, dy)
                 return true -- so the first object that's hovered will claim the mouseMove event
             else
