@@ -65,6 +65,7 @@ function module(gui)
 
         if self.visible == true and self.parent then
             self.hovered = self.parent.hovered
+            self.focused = self.parent.focused
 
             for _, child in ipairs(self.children) do
                 child:setVisible(self.visible)
@@ -102,9 +103,27 @@ function module(gui)
     function Base:keyPressed(self, key) end -- stub
     function Base:textInput(self, text) end -- stub
 
+    local function fillKey(node, key, value, down)
+        if not down then
+            if node.parent then
+                fillKey(node.parent, key, value, false)
+            else
+                down = true
+            end
+        end
+
+        if down then
+            node[key] = value
+            for _, child in ipairs(node.children) do
+                fillKey(child, key, value, true)
+            end
+        end
+    end
+
     function Base:onMouseDown(x, y, button)
         self:toTop()
         self.clicked = true
+        fillKey(self, "focused", self)
         gui.widgets.helpers.callThemeFunction(self, "onMouseDown", x, y, button)
     end
 

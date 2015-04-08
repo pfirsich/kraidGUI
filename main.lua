@@ -135,9 +135,13 @@ end
 function love.draw()
 	sceneModeGUI:draw()
 
-	love.graphics.print("subWindowB visible " .. tostring(subWindowB.visible), 0, 25)
-
-	if sceneModeGUI.hoverd == nil then
+	if sceneModeGUI.hovered == nil then
 		love.graphics.print("IN EDITOR VIEW", 0, 0)
+	end
+
+	love.graphics.print("subWindowB visible " .. tostring(subWindowB.visible), 0, 20)
+
+	if sceneModeGUI.focused then
+		love.graphics.print("Focused: " .. (sceneModeGUI.focused.text or sceneModeGUI.focused.type), 0, 40)
 	end
 end

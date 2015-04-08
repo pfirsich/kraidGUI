@@ -1,5 +1,5 @@
 Todo:
-	self.focus neu implementieren
+	pass
 
 Widgets:
 	x Windows
