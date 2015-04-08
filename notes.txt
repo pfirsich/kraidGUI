@@ -8,12 +8,13 @@ Widgets:
 	x Checkbox
 	x FormLayout / LineLayout
 	x Category
-	Radio Buttons
+	x Radio Buttons
 	Treeview
 	Input Field
 	Number Box
 		Input Field + 2 Buttons
-	Slider
+	Number Wheel
+	Slider (vielleicht nicht)
 
 Nachdenken:
 	Drop-Downs?...Oder Number-Wheels?
@@ -21,6 +22,9 @@ Nachdenken:
 		Es ist einfach widgets widgets ein "breakout"-Attribut zu geben, dass an pushCanvas weitergegeben wird und dann beim
 		scissor-canvas den 0, 0, 100000, 100000 stattdessen pusht, aber es bleibt das Problem der Renderreihenfolge bestehen.
 		Fensterränder werden weiterhin über diesen Widgets gezeichnet.
+
+	onResize für alle Widgets? Viele müssen Sachen tun, wenn die resized werden
+		Kinder resizen
 
 Bugs:
 	pass

@@ -181,6 +181,30 @@ function module(gui)
 	--------------------------------------------------------------------
 	--------------------------------------------------------------------
 
+	theme.Radiobutton = {}
+
+	theme.Radiobutton.checkSizeFactor = 0.6
+	theme.Radiobutton.borderWidth = 2
+	theme.Radiobutton.hoverLineWidth = 2
+
+	function theme.Radiobutton.draw(self)
+		local centerX, centerY = self.width/2, self.height/2
+		local radius = math.min(self.width, self.height)/2 - 1
+
+		gui.graphics.setColor(self.theme.colors.object)
+		gui.graphics.drawCircle(centerX, centerY, radius, 16)
+		gui.graphics.setColor(self.theme.colors.border)
+		gui.graphics.drawCircle(centerX, centerY, radius, 16, self.theme.Radiobutton.borderWidth)
+
+		if self.hovered then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16, self.theme.Radiobutton.hoverLineWidth) end
+
+		gui.graphics.setColor(self.theme.colors.marked)
+		if self.checked then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16) end
+	end
+
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+
 	theme.Category = {}
 
 	theme.Category.borderThickness = 5

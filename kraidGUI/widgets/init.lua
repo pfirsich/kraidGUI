@@ -25,6 +25,7 @@ function module(gui)
     gui.widgets.Window = require("kraidGUI.widgets.window")(gui)
     gui.widgets.Checkbox = require("kraidGUI.widgets.checkbox")(gui)
     gui.widgets.Category = require("kraidGUI.widgets.category")(gui)
+    gui.widgets.Radiobutton = require("kraidGUI.widgets.radiobutton")(gui)
 end
 
 return module

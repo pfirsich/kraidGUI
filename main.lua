@@ -20,6 +20,7 @@ function propCategoryCollapse(category)
 	end
 	categoryLayout:arrange()
 	propertiesLayout:arrange()
+	modeLayout:arrange()
 end
 
 function love.load()
@@ -33,7 +34,7 @@ function love.load()
 	subBLabel = gui.widgets.Label{parent = subWindowB, text = "Label B2", position = {20, 50}}
 
 	subWindowA = gui.widgets.Window{parent = sceneWindow, text = "Child A", position = {150, 100}, width = 200, height = 200}
-	subACheckbox = gui.widgets.Checkbox{parent = subWindowA, position = {5, 120}, onCheck = onCheck_checkboxA}
+	subACheckbox = gui.widgets.Checkbox{parent = subWindowA, position = {5, 120}, checked = true, onCheck = onCheck_checkboxA}
 	subAButton = gui.widgets.Button{parent = subWindowA, text = "Button A", position = {5, 55}, width = 190, height = 35, onMouseUp = function(button) print("KLICK") end}
 
 	propertiesWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Properties", position = {700, 200}, width = 350, height = 600, closeable = false}
@@ -55,25 +56,37 @@ function love.load()
 	saveAsButton = gui.widgets.Button{parent = categoryA, text = "Save As..", height = 30, minWidth = 50}
 
 	propertiesLayout = gui.layouts.LineLayout(categoryA, {["spacing"] = 5, ["padding"] = 10, ["padding-top"] = 40})
-
 	propertiesLayout:newLine()
 	propertiesLayout:addWidget(hiddenCheckbox)
 	propertiesLayout:addWidget(hiddenCheckboxLabel)
-
 	propertiesLayout:newLine()
 	propertiesLayout:addWidget(enabledCheckbox)
 	propertiesLayout:addWidget(enabledCheckboxLabel)
-
 	propertiesLayout:newLine()
 	propertiesLayout:addWidget(loadButton)
-
 	propertiesLayout:newLine()
 	propertiesLayout:addWidget(saveButton)
 	propertiesLayout:addWidget(saveAsButton)
 
+	modeLabel = gui.widgets.Label{parent = categoryB, text = "Edit mode"}
+	objectModeRadioLabel = gui.widgets.Label{parent = categoryB, text = "Object Mode"}
+	objectModeRadio = gui.widgets.Radiobutton{parent = categoryB, checked = true}
+
+	vertexModeRadioLabel = gui.widgets.Label{parent = categoryB, text = "Vertex Mode"}
+	vertexModeRadio = gui.widgets.Radiobutton{parent = categoryB}
+
+	modeLayout = gui.layouts.LineLayout(categoryB, {["spacing"] = 5, ["padding"] = 10, ["padding-top"] = 40})
+	modeLayout:newLine()
+	modeLayout:addWidget(modeLabel)
+	modeLayout:newLine()
+	modeLayout:addWidget(objectModeRadioLabel)
+	modeLayout:addWidget(objectModeRadio)
+	modeLayout:newLine()
+	modeLayout:addWidget(vertexModeRadioLabel)
+	modeLayout:addWidget(vertexModeRadio)
 
 	categoryB:setParam("collapsed", false)
-	propertiesWindow:setParam("onResize", function(window) categoryLayout:arrange(); propertiesLayout:arrange() end)
+	propertiesWindow:setParam("onResize", function(window) categoryLayout:arrange(); propertiesLayout:arrange(); modeLayout:arrange() end)
 	propertiesWindow:onResize()
 
 	love.graphics.setBackgroundColor(150, 150, 150)

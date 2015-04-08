@@ -118,7 +118,8 @@ function module(gui)
     function Base:mouseMove(x, y, dx, dy)
         if self.visible and self.enabled then
             local localMouse = gui.internal.toLocal(x, y)
-            local hovered = (self.contains and self.contains(unpack(localMouse))) or
+            -- localMouse is in parent-widget coordinates! (not in widget-local coordinates)
+            local hovered = (self.contains and self:contains(unpack(localMouse))) or
                             (self.position and self.width and self.height and gui.internal.inRect(localMouse, {self.position[1], self.position[2], self.width, self.height}))
 
             if not self.hovered and hovered and self.onMouseEnter then

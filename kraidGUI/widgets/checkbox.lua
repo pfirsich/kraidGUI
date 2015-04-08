@@ -7,7 +7,7 @@ function module(gui)
         self.position = {0, 0}
         self.width = 20
         self.height = 20
-        self.checked = true
+        self.checked = false
 
         gui.widgets.Base.init(self, params)
         gui.widgets.helpers.callThemeFunction(self, "init")
