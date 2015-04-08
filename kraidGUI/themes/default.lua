@@ -1,3 +1,4 @@
+
 function module(gui)
 	local theme = {name = "default", author = "Joel Schumacher"}
 
@@ -10,6 +11,8 @@ function module(gui)
 		marked = {205, 0, 0},
 		markedHighlight = {205, 120, 120}
 	}
+
+	local hovered = function(self) return self.hovered == self end
 
 	--------------------------------------------------------------------
 	--------------------------------------------------------------------
@@ -140,7 +143,7 @@ function module(gui)
 	theme.Button.borderWidth = 2
 
 	function theme.Button.draw(self)
-		local bg = self.clicked and self.theme.colors.objectHighlight or (self.hovered and self.theme.colors.object or self.theme.colors.border)
+		local bg = self.clicked and self.theme.colors.objectHighlight or (hovered(self) and self.theme.colors.object or self.theme.colors.border)
 		local border = self.clicked and self.theme.colors.border or self.theme.colors.objectHighlight
 
 		gui.graphics.setColor(bg)
@@ -170,7 +173,7 @@ function module(gui)
 		local w, h = self.width * self.theme.Checkbox.checkSizeFactor, self.height * self.theme.Checkbox.checkSizeFactor
 		local x, y = self.width/2 - w/2, self.height/2 - h/2
 
-		if self.hovered then gui.graphics.drawRectangle(x, y, w, h, self.theme.Checkbox.hoverLineWidth) end
+		if hovered(self) then gui.graphics.drawRectangle(x, y, w, h, self.theme.Checkbox.hoverLineWidth) end
 
 		gui.graphics.setColor(self.theme.colors.marked)
 		if self.checked then gui.graphics.drawRectangle(x, y, w, h) end
@@ -202,7 +205,7 @@ function module(gui)
 		gui.graphics.setColor(self.theme.colors.border)
 		gui.graphics.drawCircle(centerX, centerY, radius, 16, self.theme.Radiobutton.borderWidth)
 
-		if self.hovered then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16, self.theme.Radiobutton.hoverLineWidth) end
+		if hovered(self) then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16, self.theme.Radiobutton.hoverLineWidth) end
 
 		gui.graphics.setColor(self.theme.colors.marked)
 		if self.checked then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16) end
@@ -304,7 +307,7 @@ function module(gui)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
 
 		local radius = self.blownUp and theme.Numberwheel.blownUpRadius or theme.Numberwheel.smallRadius
-		gui.graphics.setColor(self.hovered and self.theme.colors.objectHighlight or self.theme.colors.object)
+		gui.graphics.setColor(hovered(self) and self.theme.colors.objectHighlight or self.theme.colors.object)
 		gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
 
 		gui.graphics.setColor(self.theme.colors.border)

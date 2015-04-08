@@ -14,9 +14,9 @@ Widgets:
 	x Radio Buttons
 	x Number Wheel
 	x Line
-	Treeview
 	Input Field
 		Number wheel durch Input Box ergänzen
+	Treeview
 	Slider (vielleicht nicht)
 
 Nachdenken:

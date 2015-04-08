@@ -60,6 +60,18 @@ function module(gui)
         if theme[self.type] == nil then error("Widget '" .. self.type .. "' is not implemented in theme '" .. theme.name .. "'.") end
     end
 
+    function Base:setVisible(visible)
+        self.visible = visible
+
+        if self.visible == true and self.parent then
+            self.hovered = self.parent.hovered
+
+            for _, child in ipairs(self.children) do
+                child:setVisible(self.visible)
+            end
+        end
+    end
+
     function Base:toTop() -- make last in list (rendered last)
         if self.parent then
             self.parent:toTop()
@@ -152,6 +164,7 @@ function module(gui)
     Base.static.setters = { -- static
         ["parent"] = Base.setParent,
         ["theme"] = Base.setTheme,
+        ["visible"] = Base.setVisible,
     }
 
     return Base
