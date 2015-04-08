@@ -100,30 +100,28 @@ function module(gui)
         end
     end
 
-    function Base:keyPressed(self, key) end -- stub
-    function Base:textInput(self, text) end -- stub
-
-    local function fillKey(node, key, value, down)
-        if not down then
-            if node.parent then
-                fillKey(node.parent, key, value, false)
-            else
-                down = true
-            end
-        end
-
-        if down then
-            node[key] = value
-            for _, child in ipairs(node.children) do
-                fillKey(child, key, value, true)
-            end
+    function Base:getGrandParent() -- returns the parent of the parent of the parent of the...
+        if self.parent then
+            return self.parent:getGrandParent()
+        else
+            return self
         end
     end
+
+    function Base:setSubTree(key, value)
+        self[key] = value
+        for _, child in ipairs(self.children) do
+            child:setSubTree(key, value)
+        end
+    end
+
+    function Base:keyPressed(self, key) end -- stub
+    function Base:textInput(self, text) end -- stub
 
     function Base:onMouseDown(x, y, button)
         self:toTop()
         self.clicked = true
-        fillKey(self, "focused", self)
+        self:getGrandParent():setSubTree("focused", self)
         gui.widgets.helpers.callThemeFunction(self, "onMouseDown", x, y, button)
     end
 
