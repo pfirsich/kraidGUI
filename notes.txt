@@ -1,5 +1,5 @@
 Todo:
-	pass
+	minWidth, maxWidth, minHeight, maxHeight für windows
 
 Widgets:
 	x Windows
@@ -14,16 +14,21 @@ Widgets:
 	x Radio Buttons
 	x Number Wheel
 	x Line
-	Input Field
+	x Input Field
+		selecting text
+		copy&paste
+		replacing selected text when editing
+		scrolling, when line is too long for text edit
+
 		Number wheel durch Input Box ergänzen
 	Treeview
 	Slider (vielleicht nicht)
 
 Nachdenken:
-	pass
+	getTime sollte exposed werden, damit animationen supported werden können
 
 Bugs:
-	pass
+	LineLayout sized LineInput nicht richtig
 
 Für Doku merken:
 	gui.widgets.setDefault("theme", "dark") um theme zu setzen

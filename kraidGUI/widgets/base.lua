@@ -115,7 +115,7 @@ function module(gui)
         end
     end
 
-    function Base:keyPressed(self, key) end -- stub
+    function Base:keyPressed(self, key, isrepeat) end -- stub
     function Base:textInput(self, text) end -- stub
 
     function Base:onMouseDown(x, y, button)

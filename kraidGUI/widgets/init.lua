@@ -31,6 +31,7 @@ function module(gui)
     gui.widgets.Radiobutton = require("kraidGUI.widgets.radiobutton")(gui)
     gui.widgets.Numberwheel = require("kraidGUI.widgets.numberwheel")(gui)
     gui.widgets.Line = require("kraidGUI.widgets.line")(gui)
+    gui.widgets.LineInput = require("kraidGUI.widgets.lineinput")(gui)
 end
 
 return module

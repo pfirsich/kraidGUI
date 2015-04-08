@@ -339,6 +339,52 @@ function module(gui)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height)
 	end
 
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+
+	theme.LineInput = {}
+
+	theme.LineInput.borderThickness = 2
+	theme.LineInput.focusBorderThickness = 4
+	theme.LineInput.textMargin = 5
+	theme.LineInput.cursorThickness = 1
+	theme.LineInput.cursorHeight = 0.75
+	theme.LineInput.cursorPickPercentage = 0.7 -- the percentage of the character that will result in the cursor being placed left from it
+
+	function theme.LineInput.onMouseDown(self, x, y, button)
+		if button == "l" then
+			local getWidth = gui.graphics.text.getWidth
+			for i = 1, self.text:len() do
+				if x < getWidth(self.text:sub(1, i - 1)) + getWidth(self.text:sub(i,i)) * theme.LineInput.cursorPickPercentage + theme.LineInput.textMargin then
+					self.cursor = i - 1
+					return
+				end
+			end
+			self.cursor = self.text:len()
+		end
+	end
+
+	function theme.LineInput.draw(self)
+		gui.graphics.setColor(self.theme.colors.object)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+
+		gui.graphics.setColor(self.theme.colors.text)
+		gui.graphics.text.draw(self.text, theme.LineInput.textMargin, self.height/2 - gui.graphics.text.getHeight()/2)
+
+		if self.focused == self then
+			gui.graphics.setColor(self.theme.colors.objectHighlight)
+			gui.graphics.drawRectangle(0, 0, self.width, self.height, theme.LineInput.focusBorderThickness)
+
+			gui.graphics.setColor(self.theme.colors.border)
+			gui.graphics.drawRectangle(	gui.graphics.text.getWidth(self.text:sub(1, self.cursor)) + theme.LineInput.textMargin,
+										(1.0 - theme.LineInput.cursorHeight) / 2 * self.height,
+										theme.LineInput.cursorThickness, self.height * theme.LineInput.cursorHeight)
+		end
+
+		gui.graphics.setColor(self.theme.colors.border)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height, theme.LineInput.borderThickness)
+	end
+
 	return theme
 end
 

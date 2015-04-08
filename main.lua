@@ -78,6 +78,9 @@ function love.load()
 	local onChange = function(wheel, value) sceneWindow.position[1] = sceneWindow.position[1] + value - wheel.value end
 	numberWheel = gui.widgets.Numberwheel{parent = categoryB, speed = function(x) return 30.0 * x*x end, onChange = onChange}
 
+	lineInputLabel = gui.widgets.Label{parent = categoryB, text = "Line Input: "}
+	lineInput = gui.widgets.LineInput{parent = categoryB, text = "Stuff", minWidth = 15}
+
 	modeLayout = gui.layouts.LineLayout(categoryB, {["spacing"] = 5, ["padding"] = 10, ["padding-top"] = 40})
 	modeLayout:newLine()
 	modeLayout:addWidget(modeLabel)
@@ -92,6 +95,9 @@ function love.load()
 	modeLayout:newLine()
 	modeLayout:addWidget(numberWheelLabel)
 	modeLayout:addWidget(numberWheel)
+	modeLayout:newLine()
+	modeLayout:addWidget(lineInputLabel)
+	modeLayout:addWidget(lineInput)
 
 	categoryB:setParam("collapsed", false)
 	categoryA:setParam("onResize", function(category) propertiesLayout:arrange() end)
@@ -100,6 +106,7 @@ function love.load()
 	propertiesWindow:onResize()
 
 	love.graphics.setBackgroundColor(150, 150, 150)
+	love.keyboard.setKeyRepeat(true)
 end
 
 function love.update()
@@ -122,13 +129,13 @@ end
 
 function love.textinput(text)
 	if sceneModeGUI.focused then
-		gui.widgets.focused:textInput(text)
+		sceneModeGUI.focused:textInput(text)
 	end
 end
 
-function love.keypressed(key)
+function love.keypressed(key, isrepeat)
 	if sceneModeGUI.focused then
-		sceneModeGUI.focused:keyPressed(key)
+		sceneModeGUI.focused:keyPressed(key, isrepeat)
 	end
 end
 
