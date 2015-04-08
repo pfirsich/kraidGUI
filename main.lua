@@ -98,7 +98,7 @@ end
 
 function love.textinput(text)
 	if gui.widgets.focused then
-		gui.widgets.focused.textInput(text)
+		gui.widgets.focused:textInput(text)
 	end
 end
 
@@ -116,7 +116,7 @@ end
 
 function love.keypressed(key)
 	if gui.widgets.focused then
-		gui.widgets.focused.keyPressed(key)
+		gui.widgets.focused:keyPressed(key)
 	end
 end
 

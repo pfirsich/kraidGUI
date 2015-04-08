@@ -72,6 +72,9 @@ function module(gui)
         end
     end
 
+    function Base:keyPressed(self, key) end -- stub
+    function Base:textInput(self, text) end -- stub
+
     local function mouseEvent(self, name, checkEvent, ...)
         if self.visible and self.enabled then
             local args = {...}
@@ -94,6 +97,7 @@ function module(gui)
         return mouseEvent(self, "mousePressed", function(self, name)
             if self.hovered then
                 self:toTop()
+                gui.widgets.focused = self
                 self.clicked = true
                 if self.onClicked then self:onClicked() end
                 gui.widgets.helpers.callThemeFunction(self, "mousePressed", x, y, button)

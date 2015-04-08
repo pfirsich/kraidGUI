@@ -1,7 +1,6 @@
 Todo:
 	Fix window dragging. Somehow make it special?
 	Fix onMouseLeave (so it will be called, when another widgets takes the 'hovership')
-	focus every widget that claimes a mousePressed
 
 Widgets:
 	x Windows
