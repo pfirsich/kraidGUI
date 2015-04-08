@@ -90,6 +90,8 @@ function love.load()
 	modeLayout:addWidget(vertexModeRadioLabel)
 	modeLayout:addWidget(vertexModeRadio)
 	modeLayout:newLine()
+	modeLayout:addWidget(gui.widgets.Line{parent = categoryB})
+	modeLayout:newLine()
 	modeLayout:addWidget(numberWheelLabel)
 	modeLayout:addWidget(numberWheel)
 

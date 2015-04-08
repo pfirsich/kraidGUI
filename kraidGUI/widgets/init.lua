@@ -30,6 +30,7 @@ function module(gui)
     gui.widgets.Category = require("kraidGUI.widgets.category")(gui)
     gui.widgets.Radiobutton = require("kraidGUI.widgets.radiobutton")(gui)
     gui.widgets.Numberwheel = require("kraidGUI.widgets.numberwheel")(gui)
+    gui.widgets.Line = require("kraidGUI.widgets.line")(gui)
 end
 
 return module

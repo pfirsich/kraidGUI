@@ -319,8 +319,18 @@ function module(gui)
 			end
 		end
 
-		gui.graphics.setColor(self.theme.colors.text)
+		gui.graphics.setColor(self.blownUp and self.theme.colors.marked or self.theme.colors.text)
 		gui.graphics.text.draw(string.format(self.format, self.value), theme.Numberwheel.textMarginLeft, self.height/2 - gui.graphics.text.getHeight()/2)
+	end
+
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+
+	theme.Line = {}
+
+	function theme.Line.draw(self)
+		gui.graphics.setColor(self.theme.colors.border)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height)
 	end
 
 	return theme
