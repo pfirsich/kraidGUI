@@ -13,14 +13,6 @@ function module(gui)
         gui.widgets.helpers.callThemeFunction(self, "init")
     end
 
-    function Radiobutton:contains(x, y)
-        local center = {self.position[1] + self.width/2, self.position[2] + self.height/2}
-        local radius = math.min(self.width, self.height)/2
-
-        local rel = {center[1] - x, center[2] - y}
-        return rel[1]*rel[1] + rel[2]*rel[2] < radius*radius
-    end
-
     function Radiobutton:onClicked()
         self:setChecked(not self.checked)
     end

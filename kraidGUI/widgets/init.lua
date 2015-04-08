@@ -4,6 +4,7 @@ function module(gui)
         if object.theme and object.theme[object.type] and object.theme[object.type][func] then
             return object.theme[object.type][func](object, ...)
         end
+        return nil
     end
 
     function gui.widgets.helpers.withCanvas(rectWidgetLike, func, breakout)

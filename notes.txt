@@ -1,5 +1,5 @@
 Todo:
-	
+
 
 Widgets:
 	x Windows
@@ -23,8 +23,10 @@ Nachdenken:
 	onResize für alle Widgets? Viele müssen Sachen tun, wenn die resized werden
 		Kinder resizen
 	Window-dragging ist scheiße. Was soll man da tun?
-		eventuell einfach immer an alle mouseMove schicken.
-		hovered und onMouseEnter und onMouseLeave sind dann separat
+		eventuell einfach immer an alle mouseMove/mouseReleased/mousePressed schicken.
+		onMouseDown and onMouseUp dann als Ersetzung für Events, die nur gefeuert werden, wenn sich die Maus im Widget befindet einführen
+		mouseMove braucht kein analogon, da kein Widgets irgendetwas tut, wenn sich die Maus darin bewegt ohne, dass man vorher reingeklickt hat.
+	contains und inRect und dieser ganze Kram ist sehr vom theme abhängig. Das sollte eigentlich nicht in die Widget-Klassen.
 
 Bugs:
 	pass

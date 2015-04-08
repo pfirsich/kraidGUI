@@ -19,12 +19,12 @@ function module(gui)
             gui.widgets.helpers.withCanvas(self, function()
                 gui.widgets.helpers.callThemeFunction(self, "update")
 
-                if not self.hovered and gui.widgets.hovered == self and self.onMouseEnter then
-                    self:onMouseEnter() -- TODO: parameters!
+                if not self.hovered and gui.widgets.hovered == self then
+                    if self.onMouseEnter then self:onMouseEnter() end
                 end
 
                 if self.hovered and not gui.widgets.hovered == self then
-                    if self.onMouseExit then self:onMouseExit() end -- TODO: parameters!
+                    if self.onMouseExit then self:onMouseExit() end
                     self.clicked = false
                 end
 
@@ -133,8 +133,10 @@ function module(gui)
     function Base:mouseMove(x, y, dx, dy)
         return mouseEvent(self, "mouseMove", function(self, name)
             local localMouse = gui.internal.toLocal(x, y)
-            local hovered = (self.contains and self:contains(unpack(localMouse))) or
-                            (self.position and self.width and self.height and gui.internal.inRect(localMouse, {0, 0, self.width, self.height}))
+            local hovered = gui.widgets.helpers.callThemeFunction(self, "contains", unpack(localMouse))
+            if hovered == nil then
+                hovered = self.position and self.width and self.height and gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
+            end
 
             if hovered then
                 gui.widgets.hovered = self
