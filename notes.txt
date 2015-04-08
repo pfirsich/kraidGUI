@@ -1,5 +1,5 @@
 Todo:
-	minWidth, maxWidth, minHeight, maxHeight für windows
+	pass
 
 Widgets:
 	x Windows
@@ -26,9 +26,10 @@ Widgets:
 
 Nachdenken:
 	getTime sollte exposed werden, damit animationen supported werden können
+		=> Möglichkeit bereitstellen nicht-graphics-calls ins backend einzubauen
 
 Bugs:
-	LineLayout sized LineInput nicht richtig
+	pass
 
 Für Doku merken:
 	gui.widgets.setDefault("theme", "dark") um theme zu setzen

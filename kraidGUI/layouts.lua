@@ -58,9 +58,9 @@ do
                 parameterStack:pushParams(self.lines[line].parameters)
 
                 local cursorX = parameterStack:getParam("padding-left")
-                local totalWidth = self.parent.width - parameterStack:getParam("padding-left") - parameterStack:getParam("padding-right")
+                local totalWidth = self.parent.width
                 local height = 0
-                local width = 0
+                local width = parameterStack:getParam("padding-left") + parameterStack:getParam("padding-right")
                 local sizeUp = {}
                 local sizeUpCount = 0
 
@@ -71,13 +71,13 @@ do
                     sizeUp[index] = 0 -- because with numbers I don't need type conversion later
                     if widget.object.minWidth or widget.object.maxWidth then
                         width = width + (widget.object.minWidth or 0)
-                        if index < #self.lines[line].widgets then width = width + parameterStack:getParam("spacing-horizontal") end
                         sizeUp[index] = 1
                         sizeUpCount = sizeUpCount + 1
-                        widget.object:setParam("width", widget.object.minWidth)
+                        widget.object.width = widget.object.minWidth or 0
                     else
                         width = width + widget.object.width
                     end
+                    if index < #self.lines[line].widgets then width = width + parameterStack:getParam("spacing-horizontal") end
 
                     parameterStack:pop()
                 end
