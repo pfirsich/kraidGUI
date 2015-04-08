@@ -1,5 +1,4 @@
 Todo:
-	Think about scissorStack[1]. Can this be done without ridiculous constants? Otherwise comment this.
 	Fix window dragging. Somehow make it special?
 	Fix onMouseLeave (so it will be called, when another widgets takes the 'hovership')
 	focus every widget that claimes a mousePressed
@@ -23,12 +22,6 @@ Widgets:
 	Slider (vielleicht nicht)
 
 Nachdenken:
-	Drop-Downs?...Oder Number-Wheels?
-		-> Wie kann man Widgets bauen, die auf allem gezeichnet werden und nicht von einem Canvas beschränkt werden?
-		Es ist einfach widgets widgets ein "breakout"-Attribut zu geben, dass an pushCanvas weitergegeben wird und dann beim
-		scissor-canvas den 0, 0, 100000, 100000 stattdessen pusht, aber es bleibt das Problem der Renderreihenfolge bestehen.
-		Fensterränder werden weiterhin über diesen Widgets gezeichnet.
-
 	onResize für alle Widgets? Viele müssen Sachen tun, wenn die resized werden
 		Kinder resizen
 

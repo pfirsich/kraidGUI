@@ -81,6 +81,8 @@ do
     end
 
     gui.internal.canvasStack = gui.internal.Stack()
+    -- This is not pretty. There could be a possibility of making a special case that unsets the scissor, but it would make quite a few places
+    -- a lot less prettier. Even though this is not strictly future proof, it's good enough. inf aka math.huge does not work!
     gui.internal.canvasStack:push({origin = {0,0}, scissor = {0,0,100000,100000}})
 
     -- relative to last scissor origin
@@ -124,7 +126,8 @@ do
     gui.widgets._defaultParameters = {
         enabled = true, -- this is just a mode of display/interactivity (disabled as in 'greyed-out' - will not be updated) - not implemented in "default"-theme.
         visible = true,
-        virtual = false -- will only be updated, but not drawn
+        virtual = false, -- will only be updated, but not drawn
+        breakout = false, -- these widgets will be drawn without being confined by it's parents boundaries. also they are drawn over all other child widgets of their parent!
     }
 
     function gui.widgets.setDefault(name, value)
