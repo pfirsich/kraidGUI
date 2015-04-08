@@ -1,3 +1,9 @@
+Todo:
+	Think about scissorStack[1]. Can this be done without ridiculous constants? Otherwise comment this.
+	Fix window dragging. Somehow make it special?
+	Fix onMouseLeave (so it will be called, when another widgets takes the 'hovership')
+	focus every widget that claimes a mousePressed
+
 Widgets:
 	x Windows
 		x Window-Resizing + Event
@@ -9,11 +15,11 @@ Widgets:
 	x FormLayout / LineLayout
 	x Category
 	x Radio Buttons
+	Number Wheel
 	Treeview
 	Input Field
 	Number Box
 		Input Field + 2 Buttons
-	Number Wheel
 	Slider (vielleicht nicht)
 
 Nachdenken:

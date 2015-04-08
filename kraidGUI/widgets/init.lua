@@ -6,17 +6,19 @@ function module(gui)
         end
     end
 
-    function gui.widgets.helpers.withCanvas(rectWidgetLike, func)
+    function gui.widgets.helpers.withCanvas(rectWidgetLike, func, breakout)
         if rectWidgetLike and rectWidgetLike.position and rectWidgetLike.width and rectWidgetLike.height then
             local x, y, w, h = rectWidgetLike.position[1], rectWidgetLike.position[2], rectWidgetLike.width, rectWidgetLike.height
-            gui.internal.pushCanvas(x, y, w, h)
+            gui.internal.pushCanvas(x, y, w, h, rectWidgetLike.breakout)
         end
 
-        func()
+        local ret = func()
 
         if rectWidgetLike and rectWidgetLike.position and rectWidgetLike.width and rectWidgetLike.height then
             gui.internal.popCanvas()
         end
+
+        return ret
     end
 
     gui.widgets.Base = require("kraidGUI.widgets.base")(gui)

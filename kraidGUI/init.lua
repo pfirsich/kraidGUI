@@ -84,13 +84,13 @@ do
     gui.internal.canvasStack:push({origin = {0,0}, scissor = {0,0,100000,100000}})
 
     -- relative to last scissor origin
-    function gui.internal.pushCanvas(x, y, w, h)
+    function gui.internal.pushCanvas(x, y, w, h, breakout)
         local origin = gui.internal.origin()
         local top = gui.internal.canvasStack:top()
 
         local sx, sy = math.max(top.scissor[1], x + origin[1]), math.max(top.scissor[2], y + origin[2])
         local sw, sh = math.min(math.max(0, top.scissor[3] - x), w), math.min(math.max(0, top.scissor[4] - y), h)
-        gui.internal.canvasStack:push{origin = {x + origin[1], y + origin[2]}, scissor = {sx, sy, sw, sh}}
+        gui.internal.canvasStack:push{origin = {x + origin[1], y + origin[2]}, scissor = breakout and gui.internal.canvasStack.stack[1].scissor or {sx, sy, sw, sh}}
 
         gui.graphics.scissorRect(unpack(gui.internal.canvasStack:top().scissor))
     end

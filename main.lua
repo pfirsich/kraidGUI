@@ -30,10 +30,10 @@ function love.load()
 
 	sceneWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Scene", position = {100, 100}, width = 300, height = 600, closeable = false}
 
-	subWindowB = gui.widgets.Window{parent = sceneWindow, text = "Child B", position = {50, 50}, width = 100, height = 100, onClose = onClose_subWinA}
+	subWindowB = gui.widgets.Window{parent = sceneWindow, text = "Child B", position = {50, 50}, width = 100, height = 100, onClose = onClose_subWinA, breakout = true}
 	subBLabel = gui.widgets.Label{parent = subWindowB, text = "Label B2", position = {20, 50}}
 
-	subWindowA = gui.widgets.Window{parent = sceneWindow, text = "Child A", position = {150, 100}, width = 200, height = 200}
+	subWindowA = gui.widgets.Window{parent = sceneWindow, text = "Child A", position = {100, 100}, width = 200, height = 200}
 	subACheckbox = gui.widgets.Checkbox{parent = subWindowA, position = {5, 120}, checked = true, onCheck = onCheck_checkboxA}
 	subAButton = gui.widgets.Button{parent = subWindowA, text = "Button A", position = {5, 55}, width = 190, height = 35, onMouseUp = function(button) print("KLICK") end}
 

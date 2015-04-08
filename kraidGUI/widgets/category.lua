@@ -16,7 +16,6 @@ function module(gui)
     end
 
     function Category:setCollapsed(collapsed)
-        print("set", collapsed)
         self.collapsed = collapsed
         self.height = self.collapsed and self.collapsedHeight or self.inflatedHeight
         if self.onCollapse then self:onCollapse() end
