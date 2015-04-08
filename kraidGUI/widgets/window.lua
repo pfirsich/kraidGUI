@@ -16,7 +16,7 @@ function module(gui)
         local closeButtonCallback = function (button)
             if not self.onClose or self:onClose() then self.visible = false end
         end
-        self.closeButton = gui.widgets.Button{parent = nil, text = "", onMouseUp = closeButtonCallback, virtual = true}
+        self.closeButton = gui.widgets.Button{parent = nil, text = "", onClicked = closeButtonCallback, virtual = true}
 
         gui.widgets.Base.init(self, params)
         gui.widgets.helpers.callThemeFunction(self, "init")

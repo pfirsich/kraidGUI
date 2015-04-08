@@ -6,7 +6,7 @@ function onClose_subWinA(window)
 	return true
 end
 
-function onCheck_checkboxA(checkbox)
+function onChecked_checkboxA(checkbox)
 	subWindowB:setParam("visible", checkbox.checked)
 end
 
@@ -34,8 +34,8 @@ function love.load()
 	subBLabel = gui.widgets.Label{parent = subWindowB, text = "Label B2", position = {20, 50}}
 
 	subWindowA = gui.widgets.Window{parent = sceneWindow, text = "Child A", position = {100, 100}, width = 200, height = 200}
-	subACheckbox = gui.widgets.Checkbox{parent = subWindowA, position = {5, 120}, checked = true, onCheck = onCheck_checkboxA}
-	subAButton = gui.widgets.Button{parent = subWindowA, text = "Button A", position = {5, 55}, width = 190, height = 35, onMouseUp = function(button) print("KLICK") end}
+	subACheckbox = gui.widgets.Checkbox{parent = subWindowA, position = {5, 120}, checked = true, onChecked = onChecked_checkboxA}
+	subAButton = gui.widgets.Button{parent = subWindowA, text = "Button A", position = {5, 55}, width = 190, height = 35, onClicked = function(button) print("KLICK") end}
 
 	propertiesWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Properties", position = {700, 200}, width = 350, height = 600, closeable = false}
 
@@ -106,12 +106,6 @@ function love.update()
 	sceneModeGUI:update()
 end
 
-function love.textinput(text)
-	if gui.widgets.focused then
-		gui.widgets.focused:textInput(text)
-	end
-end
-
 function love.mousepressed(x, y, button)
 	sceneModeGUI:mousePressed(x, y, button)
 end
@@ -121,12 +115,20 @@ function love.mousereleased(x, y, button)
 end
 
 function love.mousemoved(x, y, dx, dy)
+	-- these are two different things, because I want every event to be completely symmetric and behave the same no matter where it was called
+	sceneModeGUI:pickHovered(x, y)
 	sceneModeGUI:mouseMove(x, y, dx, dy)
 end
 
+function love.textinput(text)
+	if sceneModeGUI.focused then
+		gui.widgets.focused:textInput(text)
+	end
+end
+
 function love.keypressed(key)
-	if gui.widgets.focused then
-		gui.widgets.focused:keyPressed(key)
+	if sceneModeGUI.focused then
+		sceneModeGUI.focused:keyPressed(key)
 	end
 end
 
@@ -135,7 +137,7 @@ function love.draw()
 
 	love.graphics.print("subWindowB visible " .. tostring(subWindowB.visible), 0, 25)
 
-	if not sceneWindow.hovered and not propertiesWindow.hovered then
+	if sceneModeGUI.hoverd == nil then
 		love.graphics.print("IN EDITOR VIEW", 0, 0)
 	end
 end

@@ -13,7 +13,8 @@ function module(gui)
         gui.widgets.helpers.callThemeFunction(self, "init")
     end
 
-    function Radiobutton:onClicked()
+    function Radiobutton:onMouseDown(x, y, button)
+        gui.widgets.Base.onMouseDown(self, x, y, button)
         self:setChecked(not self.checked)
     end
 
@@ -27,7 +28,7 @@ function module(gui)
         			end
         		end
             end
-            if self.onCheck then self:onCheck(checked) end
+            if self.onChecked then self:onChecked(checked) end
         end
 
     end

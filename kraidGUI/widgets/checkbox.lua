@@ -13,13 +13,14 @@ function module(gui)
         gui.widgets.helpers.callThemeFunction(self, "init")
     end
 
-    function Checkbox:onClicked()
+    function Checkbox:onMouseDown(x, y, button)
+        gui.widgets.Base.onMouseDown(self, x, y, button)
         self:setChecked(not self.checked)
     end
 
     function Checkbox:setChecked(checked)
         self.checked = checked
-        if self.onCheck then self:onCheck(checked) end
+        if self.onChecked then self:onChecked(checked) end
     end
 
     Checkbox.static.setters["checked"] = Checkbox.setChecked

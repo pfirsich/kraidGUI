@@ -31,8 +31,11 @@ do
         if reverse == true then from, to, step = #table, 1, -1 end
 
         for i = from, to, step do
-            if func(table[i]) then return true end
+            local ret = func(table[i])
+            if ret then return ret end
         end
+
+        return nil
     end
 
     -------------------------------- GUI

@@ -78,15 +78,13 @@ function module(gui)
 		end
 	end
 
-	function theme.Window.mousePressed(self, x, y, button)
+	function theme.Window.onMouseDown(self, x, y, button)
 		if button == "l" then
-			local localMouse = gui.internal.toLocal(x, y)
-
-			if gui.internal.inRect(localMouse, {0, 0, self.width, self.theme.Window.titleBarHeight}) then
+			if y < self.theme.Window.titleBarHeight then
 				self.dragged = true
 			end
 
-			local fromCorner = {self.width - localMouse[1], self.height - localMouse[2]}
+			local fromCorner = {self.width - x, self.height - y}
 			if fromCorner[1] > 0 and fromCorner[2] > 0 and fromCorner[1] + fromCorner[2] < self.theme.Window.resizeHandleSize then
 				self.resized = true
 			end
@@ -218,7 +216,7 @@ function module(gui)
 	theme.Category.borderThickness = 5
 	theme.Category.textMarginLeft = 5
 
-	function theme.Category.mousePressed(self, x, y, button)
+	function theme.Category.onMouseDown(self, x, y, button)
 		if button == "l" then
 			local localMouse = gui.internal.toLocal(x, y)
 			if localMouse[2] < self.collapsedHeight then
@@ -286,13 +284,14 @@ function module(gui)
 			dphi = dphi + (math.atan2(rel[2] + epsilon, rel[1]) - angle)/epsilon * dy
 			dphi = dphi + (math.atan2(rel[2], rel[1] + epsilon) - angle)/epsilon * dx
 
+			-- NOTE: Check here if radius < 1.0 so outside the wheel nothing happens? It's actually quite useful, albeit unintuitive.
 			local radius = math.sqrt(rel[1]*rel[1] + rel[2]*rel[2]) / theme.Numberwheel.blownUpRadius
 			-- negative sign because I think clockwise increase seems more intuitive
 			self:setParam("value", self.value - dphi * (type(self.speed) == "function" and self.speed(radius) or self.speed) * radius)
 		end
 	end
 
-	function theme.Numberwheel.mousePressed(self, x, y, button)
+	function theme.Numberwheel.onMouseDown(self, x, y, button)
 		if button == "l" then self.blownUp = true end
 	end
 

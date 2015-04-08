@@ -19,17 +19,6 @@ function module(gui)
             gui.widgets.helpers.withCanvas(self, function()
                 gui.widgets.helpers.callThemeFunction(self, "update")
 
-                if not self.hovered and gui.widgets.hovered == self then
-                    if self.onMouseEnter then self:onMouseEnter() end
-                end
-
-                if self.hovered and not gui.widgets.hovered == self then
-                    if self.onMouseExit then self:onMouseExit() end
-                    self.clicked = false
-                end
-
-                self.hovered = gui.widgets.hovered == self
-
                 gui.internal.foreach_array(self.children, function(child)
                     child:update()
                 end, true)
@@ -91,66 +80,73 @@ function module(gui)
     function Base:keyPressed(self, key) end -- stub
     function Base:textInput(self, text) end -- stub
 
-    local function mouseEvent(self, name, checkEvent, ...)
+    function Base:onMouseDown(x, y, button)
+        self:toTop()
+        self.clicked = true
+        gui.widgets.helpers.callThemeFunction(self, "onMouseDown", x, y, button)
+    end
+
+    function Base:onMouseUp(x, y, button)
+        self.clicked = false
+        gui.widgets.helpers.callThemeFunction(self, "onMouseUp", x, y, button)
+    end
+
+    local function passMouseEvent(self, name, x, y, hoveredFunc, ...)
         if self.visible and self.enabled then
             local args = {...}
             return gui.widgets.helpers.withCanvas(self, function()
-                local claimed = gui.internal.foreach_array(self.children, function(child)
-                    return child[name](child, unpack(args)) -- will break if true
-                end, true)
+                local localMouse = gui.internal.toLocal(x, y)
+                gui.widgets.helpers.callThemeFunction(self, name, localMouse[1], localMouse[2], unpack(args))
 
-                if claimed then
-                    return true
-                else
-                    return checkEvent(self, name)
+                if self.visible and self.enabled and self.hovered == self then
+                    hoveredFunc(self, localMouse[1], localMouse[2], unpack(args))
                 end
+
+                gui.internal.foreach_array(self.children, function(child)
+                    child[name](child, x, y, unpack(args))
+                end, true)
             end)
         end
         return false
     end
 
     function Base:mousePressed(x, y, button)
-        return mouseEvent(self, "mousePressed", function(self, name)
-            if self.hovered then
-                self:toTop()
-                gui.widgets.focused = self
-                self.clicked = true
-                if self.onClicked then self:onClicked() end
-                gui.widgets.helpers.callThemeFunction(self, "mousePressed", x, y, button)
-                return true
-            end
-            return false
-        end, x, y, button)
+        passMouseEvent(self, "mousePressed", x, y, function(self, x, y, button) self:onMouseDown(x, y, button) end, button)
     end
 
     function Base:mouseReleased(x, y, button)
-        return mouseEvent(self, "mouseReleased", function(self, name)
-            if self.hovered then
-                self.clicked = false
-                if self.onMouseUp then self:onMouseUp() end
-                gui.widgets.helpers.callThemeFunction(self, "mouseReleased", x, y, button)
-                return true
-            end
-            return false
-        end, x, y, button)
+        passMouseEvent(self, "mouseReleased", x, y, function(self, x, y, button) self:onMouseUp(x, y, button) end, button)
     end
 
     function Base:mouseMove(x, y, dx, dy)
-        return mouseEvent(self, "mouseMove", function(self, name)
-            local localMouse = gui.internal.toLocal(x, y)
-            local hovered = gui.widgets.helpers.callThemeFunction(self, "contains", unpack(localMouse))
-            if hovered == nil then
-                hovered = self.position and self.width and self.height and gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
-            end
+        passMouseEvent(self, "mouseMove", x, y, function(self, x, y, dx, dy) end, dx, dy)
+    end
 
-            if hovered then
-                gui.widgets.hovered = self
-                gui.widgets.helpers.callThemeFunction(self, "mouseMove", localMouse[1], localMouse[2], dx, dy)
-                return true -- so the first object that's hovered will claim the mouseMove event
-            else
-                return false
-            end
-        end, x, y, dx, dy)
+    function Base:pickHovered(x, y)
+        self.hovered = nil
+
+        if self.visible and self.enabled then
+            gui.widgets.helpers.withCanvas(self, function(child)
+                self.hovered = gui.internal.foreach_array(self.children, function(child)
+                    local hovered = child:pickHovered(x, y)
+                    if hovered ~= nil then
+                        return child -- will break if ~= nil
+                    end
+                end, true)
+
+                if self.hovered == nil then
+                    local localMouse = gui.internal.toLocal(x, y)
+                    local hovered = gui.widgets.helpers.callThemeFunction(self, "contains", unpack(localMouse))
+                    if hovered == nil then
+                        hovered = self.position and self.width and self.height and gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
+                    end
+
+                    if hovered then self.hovered = self end
+                end
+            end)
+        end
+
+        return self.hovered
     end
 
     Base.static.setters = { -- static

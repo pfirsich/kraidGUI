@@ -9,7 +9,8 @@ function module(gui)
         self.collapsedHeight = 30
         self.inflatedHeight = 150
         self.width = 150
-        params.collapsed = params.collapsed ~= nil and false
+        self.height = self.inflatedHeight
+        self.collapsed = false
 
         gui.widgets.Base.init(self, params)
         gui.widgets.helpers.callThemeFunction(self, "init")

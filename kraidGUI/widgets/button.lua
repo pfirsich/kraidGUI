@@ -12,6 +12,13 @@ function module(gui)
         gui.widgets.helpers.callThemeFunction(self, "init")
     end
 
+    function Button:onMouseUp(x, y, button)
+        gui.widgets.Base.onMouseUp(self, x, y, button)
+        if button == "l" then
+            if self.onClicked then self:onClicked() end
+        end
+    end
+
     return Button
 end
 
