@@ -69,11 +69,16 @@ function love.load()
 	propertiesLayout:addWidget(saveAsButton)
 
 	modeLabel = gui.widgets.Label{parent = categoryB, text = "Edit mode"}
+
 	objectModeRadioLabel = gui.widgets.Label{parent = categoryB, text = "Object Mode"}
 	objectModeRadio = gui.widgets.Radiobutton{parent = categoryB, checked = true}
 
 	vertexModeRadioLabel = gui.widgets.Label{parent = categoryB, text = "Vertex Mode"}
 	vertexModeRadio = gui.widgets.Radiobutton{parent = categoryB}
+
+	numberWheelLabel = gui.widgets.Label{parent = categoryB, text = "Arbitrary Number"}
+	local onChange = function(wheel, value) sceneWindow.position[1] = sceneWindow.position[1] + value - wheel.value end
+	numberWheel = gui.widgets.Numberwheel{parent = categoryB, speed = function(x) return 30.0 * x*x end, onChange = onChange}
 
 	modeLayout = gui.layouts.LineLayout(categoryB, {["spacing"] = 5, ["padding"] = 10, ["padding-top"] = 40})
 	modeLayout:newLine()
@@ -84,6 +89,9 @@ function love.load()
 	modeLayout:newLine()
 	modeLayout:addWidget(vertexModeRadioLabel)
 	modeLayout:addWidget(vertexModeRadio)
+	modeLayout:newLine()
+	modeLayout:addWidget(numberWheelLabel)
+	modeLayout:addWidget(numberWheel)
 
 	categoryB:setParam("collapsed", false)
 	propertiesWindow:setParam("onResize", function(window) categoryLayout:arrange(); propertiesLayout:arrange(); modeLayout:arrange() end)

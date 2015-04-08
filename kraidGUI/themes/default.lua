@@ -244,6 +244,85 @@ function module(gui)
 		end
 	end
 
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+
+	theme.Numberwheel = {}
+
+	theme.Numberwheel.borderThickness = 2
+	theme.Numberwheel.wheelBorderThickness = 2
+	theme.Numberwheel.smallRadius = 5
+	theme.Numberwheel.blownUpRadius = 100
+	theme.Numberwheel.wheelMarginLeft = theme.Numberwheel.smallRadius + 5
+	theme.Numberwheel.textMarginLeft = theme.Numberwheel.smallRadius * 2 + theme.Numberwheel.wheelMarginLeft + 5
+	theme.Numberwheel.guidelineCount = 6
+	theme.Numberwheel.guidelineThickness = 1
+
+	function theme.Numberwheel.init(self)
+		self.breakout = true
+	end
+
+	function theme.Numberwheel.contains(self, x, y)
+		local rel = {theme.Numberwheel.wheelMarginLeft - x, self.height/2 - y}
+		local radius = self.blownUp and theme.Numberwheel.blownUpRadius or theme.Numberwheel.smallRadius
+		return rel[1]*rel[1] + rel[2]*rel[2] < radius*radius
+	end
+
+	function theme.Numberwheel.mouseMove(self, x, y, dx, dy)
+		local function angleDiff(a, b)
+			local diff = a - b
+			while diff >  180.0 do diff = 360 - diff end
+			while diff < -180.0 do diff = 350 + diff end
+			return diff
+		end
+
+		if self.blownUp then
+			local rel = {theme.Numberwheel.wheelMarginLeft - x, self.height/2 - y}
+			print(rel[1], rel[2])
+			local angle = math.atan2(rel[2], rel[1])
+			-- finite difference approximation and linearization (only lowest order)
+			local dphi = 0
+			local epsilon = 1e-10
+			dphi = dphi + (math.atan2(rel[2] + epsilon, rel[1]) - angle)/epsilon * dy
+			dphi = dphi + (math.atan2(rel[2], rel[1] + epsilon) - angle)/epsilon * dx
+
+			local radius = math.sqrt(rel[1]*rel[1] + rel[2]*rel[2]) / theme.Numberwheel.blownUpRadius
+			-- negative sign because I think clockwise increase seems more intuitive
+			self:setParam("value", self.value - dphi * (type(self.speed) == "function" and self.speed(radius) or self.speed) * radius)
+		end
+	end
+
+	function theme.Numberwheel.mousePressed(self, x, y, button)
+		if button == "l" then self.blownUp = true end
+	end
+
+	function theme.Numberwheel.mouseReleased(self, x, y, button)
+		if button == "l" then self.blownUp = false end
+	end
+
+	function theme.Numberwheel.draw(self)
+		gui.graphics.setColor(self.theme.colors.border)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
+
+		local radius = self.blownUp and theme.Numberwheel.blownUpRadius or theme.Numberwheel.smallRadius
+		gui.graphics.setColor(self.hovered and self.theme.colors.objectHighlight or self.theme.colors.object)
+		gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
+
+		gui.graphics.setColor(self.theme.colors.border)
+		gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32, theme.Numberwheel.wheelBorderThickness)
+
+		if self.blownUp then
+			for i = 1, self.theme.Numberwheel.guidelineCount do
+				local speed = function(x) return type(self.speed) == "function" and self.speed(x) or self.speed * x end
+				local radius = speed(1.0 / self.theme.Numberwheel.guidelineCount * (i - 1)) / speed(1.0)
+				gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius * theme.Numberwheel.blownUpRadius, 32, theme.Numberwheel.guidelineThickness)
+			end
+		end
+
+		gui.graphics.setColor(self.theme.colors.text)
+		gui.graphics.text.draw(string.format(self.format, self.value), theme.Numberwheel.textMarginLeft, self.height/2 - gui.graphics.text.getHeight()/2)
+	end
+
 	return theme
 end
 

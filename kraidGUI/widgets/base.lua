@@ -66,6 +66,11 @@ function module(gui)
         self.parent.children[#self.parent.children+1] = self
     end
 
+    function Base:setTheme(theme)
+        self.theme = theme
+        if theme[self.type] == nil then error("Widget '" .. self.type .. "' is not implemented in theme '" .. theme.name .. "'.") end
+    end
+
     function Base:toTop() -- make last in list (rendered last)
         if self.parent then
             self.parent:toTop()
@@ -140,7 +145,7 @@ function module(gui)
 
             if hovered then
                 gui.widgets.hovered = self
-                gui.widgets.helpers.callThemeFunction(self, "mouseMove", x, y, dx, dy)
+                gui.widgets.helpers.callThemeFunction(self, "mouseMove", localMouse[1], localMouse[2], dx, dy)
                 return true -- so the first object that's hovered will claim the mouseMove event
             else
                 return false
@@ -149,7 +154,8 @@ function module(gui)
     end
 
     Base.static.setters = { -- static
-        ["parent"] = Base.setParent
+        ["parent"] = Base.setParent,
+        ["theme"] = Base.setTheme,
     }
 
     return Base
