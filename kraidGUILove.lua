@@ -4,7 +4,7 @@ do
     function kraidGUILove.init(gui)
         gui.graphics = {}
 
-        function gui.graphics.setColor(r, g, b, a)
+        function gui.graphics.setColor(r, g, b, a) -- this should also be able to take a table
             love.graphics.setColor(r, g, b, a or 255)
         end
 

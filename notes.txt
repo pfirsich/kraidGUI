@@ -23,7 +23,7 @@ Nachdenken:
 	pass
 
 Bugs:
-	Categories klappen ein auch, wenn man nicht in die Titelleiste klickt
+	pass
 
 Für Doku merken:
 	gui.widgets.setDefault("theme", "dark") um theme zu setzen

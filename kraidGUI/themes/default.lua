@@ -173,10 +173,11 @@ function module(gui)
 		local w, h = self.width * self.theme.Checkbox.checkSizeFactor, self.height * self.theme.Checkbox.checkSizeFactor
 		local x, y = self.width/2 - w/2, self.height/2 - h/2
 
-		if hovered(self) then gui.graphics.drawRectangle(x, y, w, h, self.theme.Checkbox.hoverLineWidth) end
-
 		gui.graphics.setColor(self.theme.colors.marked)
 		if self.checked then gui.graphics.drawRectangle(x, y, w, h) end
+
+		gui.graphics.setColor(self.theme.colors.border)
+		if hovered(self) then gui.graphics.drawRectangle(x, y, w, h, self.theme.Checkbox.hoverLineWidth) end
 	end
 
 	--------------------------------------------------------------------
@@ -205,10 +206,11 @@ function module(gui)
 		gui.graphics.setColor(self.theme.colors.border)
 		gui.graphics.drawCircle(centerX, centerY, radius, 16, self.theme.Radiobutton.borderWidth)
 
-		if hovered(self) then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16, self.theme.Radiobutton.hoverLineWidth) end
-
 		gui.graphics.setColor(self.theme.colors.marked)
 		if self.checked then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16) end
+
+		gui.graphics.setColor(self.theme.colors.border)
+		if hovered(self) then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16, self.theme.Radiobutton.hoverLineWidth) end
 	end
 
 	--------------------------------------------------------------------
@@ -257,6 +259,7 @@ function module(gui)
 	theme.Numberwheel.textMarginLeft = theme.Numberwheel.smallRadius * 2 + theme.Numberwheel.wheelMarginLeft + 5
 	theme.Numberwheel.guidelineCount = 6
 	theme.Numberwheel.guidelineThickness = 1
+	theme.Numberwheel.wheelAlpha = 150
 
 	function theme.Numberwheel.init(self)
 		self.breakout = true
@@ -306,7 +309,9 @@ function module(gui)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
 
 		local radius = self.blownUp and theme.Numberwheel.blownUpRadius or theme.Numberwheel.smallRadius
-		gui.graphics.setColor(hovered(self) and self.theme.colors.objectHighlight or self.theme.colors.object)
+		local color = {unpack(hovered(self) and self.theme.colors.objectHighlight or self.theme.colors.object)} -- copy
+		color[4] = self.blownUp and theme.Numberwheel.wheelAlpha or 255
+		gui.graphics.setColor(color)
 		gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
 
 		gui.graphics.setColor(self.theme.colors.border)
