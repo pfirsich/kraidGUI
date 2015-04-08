@@ -20,11 +20,10 @@ Widgets:
 	Slider (vielleicht nicht)
 
 Nachdenken:
-	onResize für alle Widgets? Viele müssen Sachen tun, wenn die resized werden
-		Kinder resizen
+	pass
 
 Bugs:
-	Dinge visible und dann not visible machen, erzeugt Zustände in denen self.hovered und self.focused inkohärent sind.
+	Categories klappen ein auch, wenn man nicht in die Titelleiste klickt
 
 Für Doku merken:
 	gui.widgets.setDefault("theme", "dark") um theme zu setzen

@@ -72,6 +72,16 @@ function module(gui)
         end
     end
 
+    function Base:setWidth(width)
+        self.width = width
+        if self.onResize then self:onResize() end
+    end
+
+    function Base:setHeight(height)
+        self.height = height
+        if self.onResize then self:onResize() end
+    end
+
     function Base:toTop() -- make last in list (rendered last)
         if self.parent then
             self.parent:toTop()
@@ -165,6 +175,8 @@ function module(gui)
         ["parent"] = Base.setParent,
         ["theme"] = Base.setTheme,
         ["visible"] = Base.setVisible,
+        ["width"] = Base.setWidth,
+        ["height"] = Base.setHeight,
     }
 
     return Base

@@ -19,8 +19,6 @@ function propCategoryCollapse(category)
 		end
 	end
 	categoryLayout:arrange()
-	propertiesLayout:arrange()
-	modeLayout:arrange()
 end
 
 function love.load()
@@ -96,7 +94,9 @@ function love.load()
 	modeLayout:addWidget(numberWheel)
 
 	categoryB:setParam("collapsed", false)
-	propertiesWindow:setParam("onResize", function(window) categoryLayout:arrange(); propertiesLayout:arrange(); modeLayout:arrange() end)
+	categoryA:setParam("onResize", function(category) propertiesLayout:arrange() end)
+	categoryB:setParam("onResize", function(category) modeLayout:arrange() end)
+	propertiesWindow:setParam("onResize", function(window) categoryLayout:arrange() end)
 	propertiesWindow:onResize()
 
 	love.graphics.setBackgroundColor(150, 150, 150)

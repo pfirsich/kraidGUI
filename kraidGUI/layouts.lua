@@ -74,7 +74,7 @@ do
                         if index < #self.lines[line].widgets then width = width + parameterStack:getParam("spacing-horizontal") end
                         sizeUp[index] = 1
                         sizeUpCount = sizeUpCount + 1
-                        widget.object.width = widget.object.minWidth
+                        widget.object:setParam("width", widget.object.minWidth)
                     else
                         width = width + widget.object.width
                     end
@@ -87,7 +87,7 @@ do
 
                     -- math.floor because thin lines don't like being drawn between pixels! (button-outlines would flicker)
                     widget.object.position = {math.floor(cursorX), math.floor(cursorY + height/2 - widget.object.height/2)}
-                    widget.object.width = math.floor(widget.object.width + sizeUp[index] * math.max(0, (totalWidth - width)) / math.max(1, sizeUpCount))
+                    widget.object:setParam("width", math.floor(widget.object.width + sizeUp[index] * math.max(0, (totalWidth - width)) / math.max(1, sizeUpCount)))
                     cursorX = cursorX + widget.object.width + parameterStack:getParam("spacing-horizontal")
 
                     parameterStack:pop()
