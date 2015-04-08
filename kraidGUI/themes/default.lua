@@ -67,8 +67,12 @@ function module(gui)
 		end
 
 		if self.resized then
-			self.width = self.width + dx
-			self.height = self.height + dy
+			local clamp = function(v, lo, hi)
+				return math.max(lo or -math.huge, math.min(hi or math.huge, v))
+			end
+
+			self.width = clamp(self.width + dx, self.minWidth, self.maxWidth)
+			self.height = clamp(self.height + dy, self.minHeight, self.maxHeight)
 			if self.onResize then self:onResize() end
 			self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, self.theme.Window.closeButtonPosY})
 		end
