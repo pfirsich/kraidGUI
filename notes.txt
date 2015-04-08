@@ -16,8 +16,7 @@ Widgets:
 	x Line
 	Treeview
 	Input Field
-	Number Box
-		Input Field + 2 Buttons
+		Number wheel durch Input Box ergänzen
 	Slider (vielleicht nicht)
 
 Nachdenken:
