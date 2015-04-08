@@ -12,7 +12,8 @@ Widgets:
 	x FormLayout / LineLayout
 	x Category
 	x Radio Buttons
-	Number Wheel
+	x Number Wheel
+	x Line
 	Treeview
 	Input Field
 	Number Box
@@ -26,7 +27,6 @@ Nachdenken:
 		eventuell einfach immer an alle mouseMove/mouseReleased/mousePressed schicken.
 		onMouseDown and onMouseUp dann als Ersetzung für Events, die nur gefeuert werden, wenn sich die Maus im Widget befindet einführen
 		mouseMove braucht kein analogon, da kein Widgets irgendetwas tut, wenn sich die Maus darin bewegt ohne, dass man vorher reingeklickt hat.
-	contains und inRect und dieser ganze Kram ist sehr vom theme abhängig. Das sollte eigentlich nicht in die Widget-Klassen.
 
 Bugs:
 	pass
