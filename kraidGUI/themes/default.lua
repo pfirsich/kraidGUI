@@ -127,6 +127,7 @@ function module(gui)
 									self.width, self.height,
 									self.width, self.height - self.theme.Window.resizeHandleSize})
 
+		self.closeButton:draw()
 		if self.closeButton.visible then
 			gui.widgets.helpers.withCanvas(self.closeButton, function()
 				gui.widgets.helpers.callThemeFunction(self.closeButton, "draw")
@@ -324,7 +325,7 @@ function module(gui)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
 
 		local radius = self.blownUp and self.theme.Numberwheel.blownUpRadius or self.theme.Numberwheel.smallRadius
-		local color = {unpack((hovered(self) or hovered(self.numberInputLine)) and self.theme.colors.objectHighlight or self.theme.colors.object)} -- copy
+		local color = {unpack((hovered(self) or hovered(self.numberInputLine)) and self.theme.colors.markedHighlight or self.theme.colors.marked)} -- copy
 		color[4] = self.blownUp and self.theme.Numberwheel.wheelAlpha or 255
 		gui.graphics.setColor(color)
 		gui.graphics.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
@@ -436,10 +437,9 @@ function module(gui)
 	theme.Scrollbar.borderSize = 2
 
 	function theme.Scrollbar.init(self)
-		local size = self.vertical and {self.width, self.theme.Scrollbar.buttonSize} or {self.theme.Scrollbar.buttonSize, self.height}
-		self.buttonMinus = gui.widgets.Button{parent = self, text = "", position = {0, 0}, onClicked = function() self:scrollDown() end, width = size[1], height = size[2]}
+		self.buttonMinus = gui.widgets.Button{parent = self, text = "", position = {0, 0}, onClicked = function() self:scrollDown() end}
 		gui.widgets.helpers.passEvent("onMouseDown", self.buttonMinus, self)
-		self.buttonPlus = gui.widgets.Button{parent = self, text = "", onClicked = function() self:scrollUp() end, width = size[1], height = size[2]}
+		self.buttonPlus = gui.widgets.Button{parent = self, text = "", onClicked = function() self:scrollUp() end}
 		gui.widgets.helpers.passEvent("onMouseDown", self.buttonPlus, self)
 
 		local scrubberTheme = {Button = {}, colors = self.theme.colors}
@@ -469,6 +469,12 @@ function module(gui)
 	end
 
 	function theme.Scrollbar.update(self)
+		local size = self.vertical and {self.width, self.theme.Scrollbar.buttonSize} or {self.theme.Scrollbar.buttonSize, self.height}
+		self.buttonMinus:setParam("width", size[1])
+		self.buttonMinus:setParam("height", size[2])
+		self.buttonPlus:setParam("width", size[1])
+		self.buttonPlus:setParam("height", size[2])
+
 		local plusPos = self.vertical and {0, self.height - self.theme.Scrollbar.buttonSize} or {self.width - self.theme.Scrollbar.buttonSize, 0}
 		self.buttonPlus:setParam("position", plusPos)
 
@@ -484,6 +490,118 @@ function module(gui)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height)
 
 		gui.internal.foreach_array(self.children, function(child) child:draw() end)
+	end
+
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+
+	theme.TreeView = {}
+
+	theme.TreeView.borderThickness = 2
+	theme.TreeView.marginTop = 5
+	theme.TreeView.textMarginLeft = 30
+	theme.TreeView.circleMarginLeft = 16
+	theme.TreeView.elementHeight = 20
+	theme.TreeView.indentWidth = 25
+	theme.TreeView.smallCircleRadius = 3 -- uncollapsed
+	theme.TreeView.bigCircleRadius = 7 -- collapsed
+	theme.TreeView.circleThickness = 2
+	theme.TreeView.selectionMarginLeftRight = 5
+
+	function theme.TreeView.init(self)
+		self.scrollbar = gui.widgets.Scrollbar{parent = self}
+		self.scroll = 0
+	end
+
+	function theme.TreeView.update(self)
+		self.straightenedTree = {}
+		local showDepth = -1
+		for i = 1, #self.linearizedTree do
+			if self.linearizedTree[i].depth <= showDepth or showDepth < 0 then
+				self.straightenedTree[#self.straightenedTree+1] = self.linearizedTree[i]
+
+				if self.linearizedTree[i].collapsed then
+					showDepth = self.linearizedTree[i].depth
+				else
+					showDepth = -1
+				end
+			end
+		end
+
+		self.scrollbar:setParam("position", {self.width - self.scrollbar.width, 0})
+		self.scrollbar:setParam("length", self.height)
+
+		local overlap = #self.straightenedTree * self.theme.TreeView.elementHeight - self.height
+		local overlapFrac = self.height / (#self.straightenedTree * self.theme.TreeView.elementHeight)
+		if overlap > 0 then
+			self.scrollbar:setParam("visible", true)
+			self.scrollbar.scrubberLength = (self.scrollbar.height - self.scrollbar.theme.Scrollbar.buttonSize * 2) * overlapFrac
+			self.scroll = self.scrollbar.value * overlap
+		else
+			self.scrollbar:setParam("visible", false)
+			self.scroll = 0
+		end
+	end
+
+	function theme.TreeView.onMouseDown(self, x, y, button)
+		if button == "l" then
+			local index = math.floor((y - self.theme.TreeView.marginTop + self.scroll) / self.theme.TreeView.elementHeight) + 1
+			if index >= 1 and index <= #self.straightenedTree then
+				x = x - self.straightenedTree[index].depth * self.theme.TreeView.indentWidth
+
+				if x > 0 and x < theme.TreeView.textMarginLeft then
+					self.straightenedTree[index].collapsed = not self.straightenedTree[index].collapsed
+				else
+					if (gui.system.keyDown("lshift") or gui.system.keyDown("rshift")) and self.multiSelect then
+						self.selected[#self.selected+1] = self.straightenedTree[index]
+					else
+						self.selected = {self.straightenedTree[index]}
+					end
+				end
+			end
+		end
+
+		if button == "wd" then self.scrollbar:scrollUp() end
+		if button == "wu" then self.scrollbar:scrollDown() end
+	end
+
+	function theme.TreeView.draw(self)
+		gui.graphics.setColor(self.theme.colors.object)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+		gui.graphics.setColor(self.theme.colors.border)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.TreeView.borderThickness)
+
+		local y = self.theme.TreeView.marginTop - self.scroll
+		for i = 1, #self.straightenedTree do
+			local node = self.straightenedTree[i]
+
+			local x = node.depth * self.theme.TreeView.indentWidth
+
+			local selected = false
+			for i = 1, #self.selected do
+				if node == self.selected[i] then selected = true; break end
+			end
+			if selected then
+				gui.graphics.setColor(self.theme.colors.border)
+				gui.graphics.drawRectangle(	theme.TreeView.selectionMarginLeftRight, y,
+											self.width - theme.TreeView.selectionMarginLeftRight*2, self.theme.TreeView.elementHeight)
+			end
+
+			if node.children and #node.children > 0 then
+				gui.graphics.setColor(self.theme.colors.objectHighlight)
+				local radius = node.collapsed and self.theme.TreeView.bigCircleRadius or self.theme.TreeView.smallCircleRadius
+				gui.graphics.drawCircle(self.theme.TreeView.circleMarginLeft + x,
+										self.theme.TreeView.elementHeight/2 + y,
+										radius, 16, self.theme.TreeView.circleThickness)
+			end
+
+			gui.graphics.setColor(self.theme.colors.text)
+			gui.graphics.text.draw(node.text, self.theme.TreeView.textMarginLeft + x, self.theme.TreeView.elementHeight/2 - gui.graphics.text.getHeight()/2 + y)
+
+			y = y + self.theme.TreeView.elementHeight
+		end
+
+		self.scrollbar:draw()
 	end
 
 	return theme

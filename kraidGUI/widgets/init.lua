@@ -37,6 +37,7 @@ function module(gui)
     gui.widgets.Numberwheel = require("kraidGUI.widgets.numberwheel")(gui)
     gui.widgets.Line = require("kraidGUI.widgets.line")(gui)
     gui.widgets.Scrollbar = require("kraidGUI.widgets.scrollbar")(gui)
+    gui.widgets.TreeView = require("kraidGUI.widgets.treeview")(gui)
 end
 
 return module

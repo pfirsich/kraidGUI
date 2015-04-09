@@ -5,7 +5,7 @@ function module(gui)
         self.type = "Scrollbar"
 
         self.position = {0, 0}
-        self.vertical = params.vertical -- should this be two different widgets?
+        self.vertical = true -- should this be two different widgets?
         self.value = 0.0
         self.scrollDelta = 0.1
         self:setParam("length", 300)
@@ -14,6 +14,8 @@ function module(gui)
         gui.widgets.Base.init(self, params)
         gui.widgets.helpers.callThemeFunction(self, "init")
 
+        self:setParam("length", self.length)
+        self:setParam("thickness", self.thickness)
     end
 
     function Scrollbar:scrollUp()

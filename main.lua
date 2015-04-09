@@ -42,11 +42,14 @@ function love.load()
 
 	categoryA = gui.widgets.Category{parent = propertiesWindow, text = "Category A", minWidth = 50, inflatedHeight = 200, onCollapse = propCategoryCollapse}
 	categoryB = gui.widgets.Category{parent = propertiesWindow, text = "Category B", minWidth = 50, inflatedHeight = 250, onCollapse = propCategoryCollapse}
+	categoryC = gui.widgets.Category{parent = propertiesWindow, text = "TreeView", minWidth = 50, inflatedHeight = 450, onCollapse = propCategoryCollapse}
 	categoryLayout = gui.layouts.LineLayout(propertiesWindow, {["spacing"] = 5, ["padding"] = 5, ["padding-top"] = 30})
 	categoryLayout:newLine()
 	categoryLayout:addWidget(categoryA)
 	categoryLayout:newLine()
 	categoryLayout:addWidget(categoryB)
+	categoryLayout:newLine()
+	categoryLayout:addWidget(categoryC)
 
 	hiddenCheckbox = gui.widgets.Checkbox{parent = categoryA}
 	hiddenCheckboxLabel = gui.widgets.Label{parent = categoryA, text = "hidden"}
@@ -106,9 +109,49 @@ function love.load()
 	modeLayout:addWidget(lineInputLabel)
 	modeLayout:addWidget(lineInput)
 
+	local onClickedTreeElement = function(element) print("Select:", element.text, element.id) end
+	treeView = gui.widgets.TreeView{parent = categoryC, position = {10, 40}, height = categoryC.height - 50, onElementClicked = onClickedTreeElement,
+		tree = {children = {
+			{text = "Letters", children = {
+				{text = "A-D", children = {
+					{text = "A"},
+					{text = "B"},
+					{text = "C"},
+					{text = "D"},
+					{text = "E"},
+					{text = "F"},
+					{text = "G"},
+					{text = "H"},
+					{text = "I"},
+					{text = "J"},
+					{text = "K"},
+					{text = "L"},
+					{text = "M"},
+				}}
+			}},
+			{text = "Numbers", children = {
+				{text = "1", collapsed = true, children = {
+					{text = "1"}
+				}},
+				{text = "2"},
+				{text = "3"},
+				{text = "4"},
+				{text = "5"},
+				{text = "6"},
+				{text = "7"},
+				{text = "8"},
+				{text = "9"},
+				{text = "10"},
+				{text = "11"},
+			}}
+		}}
+	}
+	treeView.selected = {treeView.tree.children[2], treeView.tree.children[1].children[1].children[2]}
+
 	categoryB:setParam("collapsed", false)
 	categoryA:setParam("onResize", function(category) propertiesLayout:arrange() end)
 	categoryB:setParam("onResize", function(category) modeLayout:arrange() end)
+	categoryC:setParam("onResize", function(category) treeView:setParam("width", category.width - 20) end)
 	propertiesWindow:setParam("onResize", function(window) categoryLayout:arrange() end)
 	propertiesWindow:onResize()
 

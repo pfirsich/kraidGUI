@@ -1,12 +1,13 @@
 Todo:
-	Fenster mit Scrollbar bauen (vllt. als Subclass)
-	Image-Funktionalität im Backend
-	Cursor-Funktionalität
+	Build a window with a scrollbar (maybe as a subclass even)
+		-> getChildrenDimension ("Think about")
+	Image-functionality in backend
+	Cursor-support in backend
+	Mutliple font support
 
 Widgets:
 	x Windows
-		x Window-Resizing + Event
-			Nur Diagonal! - vllt. mit kleiner Box unten rechts?
+		x Window-Resizing + Event (only diagonal)
 		x Window-Closing + Event
 	x Label
 	x Buttons
@@ -19,26 +20,26 @@ Widgets:
 	x Input Field
 		scrolling, when line is too long for text edit
 	x Number wheel durch Input Box ergänzen
-
 	x Scroll bars (vertical, horizontal)
-	Treeview
+	x Treeview
 
-	Vielleicht:
+	Maybe:
 		Context menus
 		Menu bars
 		Toolbars
 		Slider
 
-Nachdenken:
+Think about:
 	Layouter muss irgendwie Größe des Contents zurückgeben können, damit man scrollbars ein- und ausblenden kann.
 		Vielleicht als separate Methode? Sodass man die aufrufen kann, bevor man arrange()ed
 		Das könnte behindert sein, weil man auch content hat, der nicht gelayoutet ist. Man sollte stattdessen eine Bounding-Box für alle child-Elemente finden können.
 			Man muss dann halt zwei mal layouten
 
-	warum rufe ich beim closeButton im Window nicht einfach :draw auf? statt themeFunction.
 	sollte der closeButton im Window in theme.init erstellt werden?
 
 	scrollBarV und scrollBarH als verschiedene klassen?
+
+	Müssen 'on' callbacks wirklich zuerst gesetzt werden? (hab ich das einfach doof gedacht?)
 
 Bugs:
 	pass
