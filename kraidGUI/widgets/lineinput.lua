@@ -60,7 +60,7 @@ function module(gui)
 
         if key == "backspace" then
             if self.cursor[1] == self.cursor[2] then
-                self.cursor[1] = math.max(self.cursor[1] - 1)
+                self.cursor[1] = math.max(self.cursor[1] - 1, 0)
             end
             self:cut()
 
@@ -70,7 +70,7 @@ function module(gui)
 
     function LineInput:setText(text)
         self.text = text
-        self.cursor = self.text:len()
+        self.cursor = {self.text:len(), self.text:len()}
     end
 
     LineInput.static.setters["text"] = LineInput.setText

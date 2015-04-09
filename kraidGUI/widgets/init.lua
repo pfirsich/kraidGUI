@@ -29,9 +29,9 @@ function module(gui)
     gui.widgets.Checkbox = require("kraidGUI.widgets.checkbox")(gui)
     gui.widgets.Category = require("kraidGUI.widgets.category")(gui)
     gui.widgets.Radiobutton = require("kraidGUI.widgets.radiobutton")(gui)
+    gui.widgets.LineInput = require("kraidGUI.widgets.lineinput")(gui)
     gui.widgets.Numberwheel = require("kraidGUI.widgets.numberwheel")(gui)
     gui.widgets.Line = require("kraidGUI.widgets.line")(gui)
-    gui.widgets.LineInput = require("kraidGUI.widgets.lineinput")(gui)
 end
 
 return module

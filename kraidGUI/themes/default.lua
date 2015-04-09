@@ -260,13 +260,16 @@ function module(gui)
 	theme.Numberwheel.smallRadius = 5
 	theme.Numberwheel.blownUpRadius = 100
 	theme.Numberwheel.wheelMarginLeft = theme.Numberwheel.smallRadius + 5
-	theme.Numberwheel.textMarginLeft = theme.Numberwheel.smallRadius * 2 + theme.Numberwheel.wheelMarginLeft + 5
+	theme.Numberwheel.textMarginLeft = theme.Numberwheel.smallRadius + theme.Numberwheel.wheelMarginLeft + 5
 	theme.Numberwheel.guidelineCount = 6
 	theme.Numberwheel.guidelineThickness = 1
 	theme.Numberwheel.wheelAlpha = 150
 
 	function theme.Numberwheel.init(self)
 		self.breakout = true
+		self.numberInputLine.position = {theme.Numberwheel.textMarginLeft, 0}
+		self.numberInputLine.width = self.width - theme.Numberwheel.textMarginLeft
+		self.numberInputLine.height = self.height
 	end
 
 	function theme.Numberwheel.contains(self, x, y)
@@ -313,7 +316,7 @@ function module(gui)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
 
 		local radius = self.blownUp and theme.Numberwheel.blownUpRadius or theme.Numberwheel.smallRadius
-		local color = {unpack(hovered(self) and self.theme.colors.objectHighlight or self.theme.colors.object)} -- copy
+		local color = {unpack((hovered(self) or hovered(self.numberInputLine)) and self.theme.colors.objectHighlight or self.theme.colors.object)} -- copy
 		color[4] = self.blownUp and theme.Numberwheel.wheelAlpha or 255
 		gui.graphics.setColor(color)
 		gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
@@ -329,8 +332,9 @@ function module(gui)
 			end
 		end
 
-		gui.graphics.setColor(self.blownUp and self.theme.colors.marked or self.theme.colors.text)
-		gui.graphics.text.draw(string.format(self.format, self.value), theme.Numberwheel.textMarginLeft, self.height/2 - gui.graphics.text.getHeight()/2)
+		gui.widgets.helpers.withCanvas(self.numberInputLine, function()
+			gui.widgets.helpers.callThemeFunction(self.numberInputLine, "draw")
+		end)
 	end
 
 	--------------------------------------------------------------------

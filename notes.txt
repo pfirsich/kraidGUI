@@ -15,10 +15,8 @@ Widgets:
 	x Number Wheel
 	x Line
 	x Input Field
-		copy&paste
 		scrolling, when line is too long for text edit
-
-		Number wheel durch Input Box ergänzen
+	x Number wheel durch Input Box ergänzen
 	Treeview
 	Slider (vielleicht nicht)
 
