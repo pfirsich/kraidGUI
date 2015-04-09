@@ -89,6 +89,10 @@ function module(gui)
         if self.onResize then self:onResize() end
     end
 
+    function Base:setPosition(position)
+        self.position = {math.floor(position[1] + 0.5), math.floor(position[2] + 0.5)}
+    end
+
     function Base:toTop() -- make last in list (rendered last)
         if self.parent then
             self.parent:toTop()
@@ -213,6 +217,7 @@ function module(gui)
         ["visible"] = Base.setVisible,
         ["width"] = Base.setWidth,
         ["height"] = Base.setHeight,
+        ["position"] = Base.setPosition,
     }
 
     return Base
