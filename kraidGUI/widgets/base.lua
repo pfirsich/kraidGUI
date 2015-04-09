@@ -9,8 +9,14 @@ function module(gui)
         gui.internal.addTableKeys(set, gui.widgets._defaultParameters)
         if params then gui.internal.addTableKeys(set, params) end
 
+        -- first set callbacks
         gui.internal.foreach(set, function(param, value)
-            self:setParam(param, value)
+            if param:sub(1,2) == "on" then self:setParam(param, value) end
+        end)
+
+        -- then set values
+        gui.internal.foreach(set, function(param, value)
+            if param:sub(1,2) ~= "on" then self:setParam(param, value) end
         end)
     end
 
