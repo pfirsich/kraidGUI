@@ -355,16 +355,34 @@ function module(gui)
 	theme.LineInput.cursorHeight = 0.75
 	theme.LineInput.cursorPickPercentage = 0.7 -- the percentage of the character that will result in the cursor being placed left from it
 
+	function pickLetter(self, x)
+		local getWidth = gui.graphics.text.getWidth
+		for i = 1, self.text:len() do
+			if x < getWidth(self.text:sub(1, i - 1)) + getWidth(self.text:sub(i,i)) * theme.LineInput.cursorPickPercentage + theme.LineInput.textMargin then
+				return i - 1
+			end
+		end
+		return self.text:len()
+	end
+
+	function theme.LineInput.mouseMove(self, x, y, dx, dy)
+		if self.selecting then
+			local cursor = pickLetter(self, x)
+			self.cursor[1] = math.min(cursor, self.startSelect)
+			self.cursor[2] = math.max(cursor, self.startSelect)
+		end
+	end
+
+	function theme.LineInput.mouseReleased(self, x, y, button)
+		if button == "l" then self.selecting = false end
+	end
+
 	function theme.LineInput.onMouseDown(self, x, y, button)
 		if button == "l" then
-			local getWidth = gui.graphics.text.getWidth
-			for i = 1, self.text:len() do
-				if x < getWidth(self.text:sub(1, i - 1)) + getWidth(self.text:sub(i,i)) * theme.LineInput.cursorPickPercentage + theme.LineInput.textMargin then
-					self.cursor = i - 1
-					return
-				end
-			end
-			self.cursor = self.text:len()
+			local cursor = pickLetter(self, x)
+			self.cursor = {cursor, cursor}
+			self.startSelect = cursor
+			self.selecting = true
 		end
 	end
 
@@ -372,17 +390,20 @@ function module(gui)
 		gui.graphics.setColor(self.theme.colors.object)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height)
 
+		if self.focused == self then
+			gui.graphics.setColor(self.theme.colors.border)
+			gui.graphics.drawRectangle(	gui.graphics.text.getWidth(self.text:sub(1, self.cursor[1])) + theme.LineInput.textMargin,
+										(1.0 - theme.LineInput.cursorHeight) / 2 * self.height,
+										math.max(gui.graphics.text.getWidth(self.text:sub(self.cursor[1] + 1, self.cursor[2])), theme.LineInput.cursorThickness),
+										self.height * theme.LineInput.cursorHeight)
+		end
+
 		gui.graphics.setColor(self.theme.colors.text)
 		gui.graphics.text.draw(self.text, theme.LineInput.textMargin, self.height/2 - gui.graphics.text.getHeight()/2)
 
 		if self.focused == self then
 			gui.graphics.setColor(self.theme.colors.objectHighlight)
 			gui.graphics.drawRectangle(0, 0, self.width, self.height, theme.LineInput.focusBorderThickness)
-
-			gui.graphics.setColor(self.theme.colors.border)
-			gui.graphics.drawRectangle(	gui.graphics.text.getWidth(self.text:sub(1, self.cursor)) + theme.LineInput.textMargin,
-										(1.0 - theme.LineInput.cursorHeight) / 2 * self.height,
-										theme.LineInput.cursorThickness, self.height * theme.LineInput.cursorHeight)
 		end
 
 		gui.graphics.setColor(self.theme.colors.border)

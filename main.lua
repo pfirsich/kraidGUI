@@ -79,7 +79,7 @@ function love.load()
 	numberWheel = gui.widgets.Numberwheel{parent = categoryB, speed = function(x) return 30.0 * x*x end, onChange = onChange}
 
 	lineInputLabel = gui.widgets.Label{parent = categoryB, text = "Line Input: "}
-	lineInput = gui.widgets.LineInput{parent = categoryB, text = "Stuff", minWidth = 15}
+	lineInput = gui.widgets.LineInput{parent = categoryB, text = "Lorem ipsum dolor bla bla", minWidth = 15}
 
 	modeLayout = gui.layouts.LineLayout(categoryB, {["spacing"] = 5, ["padding"] = 10, ["padding-top"] = 40})
 	modeLayout:newLine()

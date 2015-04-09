@@ -15,9 +15,7 @@ Widgets:
 	x Number Wheel
 	x Line
 	x Input Field
-		selecting text
 		copy&paste
-		replacing selected text when editing
 		scrolling, when line is too long for text edit
 
 		Number wheel durch Input Box ergänzen
