@@ -30,19 +30,20 @@ Widgets:
 		Slider
 
 Think about:
-	Layouter muss irgendwie Größe des Contents zurückgeben können, damit man scrollbars ein- und ausblenden kann.
-		Vielleicht als separate Methode? Sodass man die aufrufen kann, bevor man arrange()ed
-		Das könnte behindert sein, weil man auch content hat, der nicht gelayoutet ist. Man sollte stattdessen eine Bounding-Box für alle child-Elemente finden können.
-			Man muss dann halt zwei mal layouten
+	For showing/hiding scrollbars widgets should be able to determine a bounding box of their children
 
-	sollte der closeButton im Window in theme.init erstellt werden?
+	Some things have to be handled in theme.update, but they shouldn't maybe have the possibility for setters to be called for themes?
 
-	scrollBarV und scrollBarH als verschiedene klassen?
+	Should vertical and horizontal scrollbars be different classes? (I think yes, but I'm too lazy)
 
-	Müssen 'on' callbacks wirklich zuerst gesetzt werden? (hab ich das einfach doof gedacht?)
+	Do 'on' callbacks really have to be set first? They are not even called by Base.init? (was I stupid?)
 
 Bugs:
-	pass
+	Numberwheel Text Input is all kinds of strange (I don't even know what exactly goes wrong)
+	Sometimes the program crashes, saying: 'UTF-8 decoding error: not enough space'. This happens when you try to delete ö,ä,ü
+		https://love2d.org/wiki/utf8
+		https://love2d.org/wiki/love.textinput
+		https://love2d.org/forums/viewtopic.php?f=4&t=8760
 
 Für Doku merken:
 	gui.widgets.setDefault("theme", "dark") um theme zu setzen

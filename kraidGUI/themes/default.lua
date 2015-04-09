@@ -36,12 +36,18 @@ function module(gui)
 	theme.Window.resizeHandleSize = 15
 
 	theme.Window.closeButtonWidth = 20
-	theme.Window.closeButtonHeight = 8
+	theme.Window.closeButtonHeight = 7
 	theme.Window.closeButtonMargin = theme.Window.closeButtonWidth + 5
-	theme.Window.closeButtonPosY = -1
 
 	function theme.Window.init(self)
-		self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, self.theme.Window.closeButtonPosY})
+        local closeButtonCallback = function (button)
+            if not self.onClose or self:onClose() then self.visible = false end
+        end
+
+		-- this button is virtual, because it would not get events being on the title bar
+		self.closeButton = gui.widgets.Button{parent = self, text = "", onClicked = closeButtonCallback, visible = self.closeable, breakout = true}
+
+		self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, 0})
 		self.closeButton:setParam("width", self.theme.Window.closeButtonWidth)
 		self.closeButton:setParam("height", self.theme.Window.closeButtonHeight)
 
@@ -55,6 +61,10 @@ function module(gui)
 		}
 		buttonTheme.Button.draw = self.theme.Button.draw
 		self.closeButton:setParam("theme", buttonTheme)
+	end
+
+	function theme.Window.update(self)
+		self.closeButton:setParam("visible", self.closeable)
 	end
 
 	function theme.Window.mouseMove(self, x, y, dx, dy)
@@ -71,7 +81,7 @@ function module(gui)
 			self.width = clamp(self.width + dx, self.minWidth, self.maxWidth)
 			self.height = clamp(self.height + dy, self.minHeight, self.maxHeight)
 			if self.onResize then self:onResize() end
-			self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, self.theme.Window.closeButtonPosY})
+			self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, 0})
 		end
 	end
 
@@ -126,13 +136,6 @@ function module(gui)
 		gui.graphics.drawPolygon({	self.width - self.theme.Window.resizeHandleSize, self.height,
 									self.width, self.height,
 									self.width, self.height - self.theme.Window.resizeHandleSize})
-
-		self.closeButton:draw()
-		if self.closeButton.visible then
-			gui.widgets.helpers.withCanvas(self.closeButton, function()
-				gui.widgets.helpers.callThemeFunction(self.closeButton, "draw")
-			end)
-		end
 
 		gui.internal.foreach_array(self.children, function(child)
 			if child.breakout then child:draw() end
