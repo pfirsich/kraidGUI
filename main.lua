@@ -35,8 +35,7 @@ function love.load()
 	subACheckbox = gui.widgets.Checkbox{parent = subWindowA, position = {5, 120}, checked = true, onChecked = onChecked_checkboxA}
 	subAButton = gui.widgets.Button{parent = subWindowA, text = "Button A", position = {5, 55}, width = 190, height = 35, onClicked = function(button) print("KLICK") end}
 
-	scollBarV = gui.widgets.Scrollbar{parent = sceneWindow, position = {10, 200}, length = 300, vertical = true}
-	scollBarH = gui.widgets.Scrollbar{parent = sceneWindow, position = {40, 200}, length = 300, vertical = false}
+	scollBarH = gui.widgets.Scrollbar{parent = sceneWindow, position = {40, 400}, length = 200, vertical = false}
 
 	propertiesWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Properties", position = {700, 200}, width = 350, height = 600, closeable = false, minWidth = 250, minHeight = 350}
 

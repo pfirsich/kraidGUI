@@ -38,8 +38,6 @@ Think about:
 
 	Should vertical and horizontal scrollbars be different classes? (I think yes, but I'm too lazy)
 
-	Do 'on' callbacks really have to be set first? They are not even called by Base.init? (was I stupid?)
-
 Bugs:
 	pass
 
