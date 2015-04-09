@@ -50,7 +50,10 @@ do
 
         gui.graphics.scissorRect = love.graphics.setScissor
 
-        gui.system = {getTime = love.timer.getTime}
+        gui.system = {
+            getTime = love.timer.getTime,
+            keyDown = love.keyboard.isDown,
+        }
     end
 
     return kraidGUILove
