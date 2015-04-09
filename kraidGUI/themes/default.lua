@@ -89,9 +89,19 @@ function module(gui)
 			end
 
 			local fromCorner = {self.width - x, self.height - y}
-			if fromCorner[1] > 0 and fromCorner[2] > 0 and fromCorner[1] + fromCorner[2] < self.theme.Window.resizeHandleSize then
+			if fromCorner[1] + fromCorner[2] < self.theme.Window.resizeHandleSize then
 				self.resized = true
 			end
+		end
+	end
+
+	function theme.Window.childrenFilter(self, x, y)
+		if gui.internal.inRect({x, y}, {0, 0, self.width, self.height}) then
+			if y < self.theme.Window.titleBarHeight then return true end
+			if self.width - x + self.height - y < self.theme.Window.resizeHandleSize then return true end
+			return false
+		else
+			return true
 		end
 	end
 

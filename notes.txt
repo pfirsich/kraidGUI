@@ -31,13 +31,11 @@ Widgets:
 Nachdenken:
 	Layouter muss irgendwie Größe des Contents zurückgeben können, damit man scrollbars ein- und ausblenden kann.
 		Vielleicht als separate Methode? Sodass man die aufrufen kann, bevor man arrange()ed
+		Das könnte behindert sein, weil man auch content hat, der nicht gelayoutet ist. Man sollte stattdessen eine Bounding-Box für alle child-Elemente finden können.
+			Man muss dann halt zwei mal layouten
 
 Bugs:
-	Fenster-Resize-Handle kriegt Klicks nicht, wenn ein child die vorher grabbt.
-		Genau so klauen Sub-Fenster die Klicks under der Titlebar vom Hauptfenster
-		=> mousePressed observen, statt onMouseDown und gucken ob self.hovered ~= nil ist (ein child ist gehovert) und dann das Event bearbeiten
-			Kinder bekommen das event trotzdem :/
-		Genau so kann man Fenster grabben, wenn die eigentlich nicht sichtbar sind
+	pass
 
 Für Doku merken:
 	gui.widgets.setDefault("theme", "dark") um theme zu setzen

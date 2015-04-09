@@ -161,20 +161,35 @@ function module(gui)
         passMouseEvent(self, "mouseMove", x, y, function(self, x, y, dx, dy) end, dx, dy)
     end
 
-    function Base:pickHovered(x, y)
+    -- some parts of the GUI had quite some amount of magic, but now it's this function that's by far the most magical.
+    -- TODO: comment this more
+    function Base:pickHovered(x, y, filtered)
         self.hovered = nil
 
         if self.visible and self.enabled then
             gui.widgets.helpers.withCanvas(self, function(child)
+                local localMouse = gui.internal.toLocal(x, y)
+
+                local childrenFilter = filtered
+                if not childrenFilter then
+                    -- childrenFilter is different from contains, because you still want the widget to be hovered in not-filtered areas not occupied by child
+                    -- so toTop() works properly and hovered in generall is set correctly
+                    local themeFilter = gui.widgets.helpers.callThemeFunction(self, "childrenFilter", unpack(localMouse))
+                    if themeFilter == nil then
+                        childrenFilter = self.position and self.width and self.height and not gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
+                    else
+                        childrenFilter = themeFilter
+                    end
+                end
+
                 self.hovered = gui.internal.foreach_array(self.children, function(child)
-                    local hovered = child:pickHovered(x, y)
+                    local hovered = child:pickHovered(x, y, childrenFilter)
                     if hovered ~= nil then
                         return child -- will break if ~= nil
                     end
                 end, true)
 
-                if self.hovered == nil then
-                    local localMouse = gui.internal.toLocal(x, y)
+                if self.hovered == nil and (not filtered or self.breakout) then
                     local hovered = gui.widgets.helpers.callThemeFunction(self, "contains", unpack(localMouse))
                     if hovered == nil then
                         hovered = self.position and self.width and self.height and gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
