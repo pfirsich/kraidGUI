@@ -22,6 +22,22 @@ function module(gui)
         if self.onCollapse then self:onCollapse() end
     end
 
+    function Category:updateHeight()
+        self.height = self.collapsed and self.collapsedHeight or self.inflatedHeight
+    end
+
+    function Category:setInflatedHeight(inflatedHeight)
+        self.inflatedHeight = inflatedHeight
+        self:updateHeight()
+    end
+
+    function Category:setCollapsedHeight(collapsedHeight)
+        self.collapsedHeight = collapsedHeight
+        self:updateHeight()
+    end
+
+    Category.static.setters["inflatedHeight"] = Category.setInflatedHeight
+    Category.static.setters["collapsedHeight"] = Category.setCollapsedHeight
     Category.static.setters["collapsed"] = Category.setCollapsed
 
     return Category
