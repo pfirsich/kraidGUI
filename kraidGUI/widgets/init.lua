@@ -22,6 +22,10 @@ function module(gui)
         return ret
     end
 
+    function gui.widgets.helpers.passEvent(event, source, target)
+        source:setParam(event, function(source, ...) return target[event](target, ...) end)
+    end
+
     gui.widgets.Base = require("kraidGUI.widgets.base")(gui)
     gui.widgets.Label = require("kraidGUI.widgets.label")(gui)
     gui.widgets.Button = require("kraidGUI.widgets.button")(gui)

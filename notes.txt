@@ -1,5 +1,6 @@
 Todo:
 	Image-Funktionalität im Backend
+	Cursor-Funktionalität
 
 Widgets:
 	x Windows
@@ -17,15 +18,26 @@ Widgets:
 	x Input Field
 		scrolling, when line is too long for text edit
 	x Number wheel durch Input Box ergänzen
+
+	Scroll bars (vertical, horizontal)
 	Treeview
-	Context menu (vielleicht)
-	Slider (eher nicht)
+
+	Vielleicht:
+		Context menus
+		Menu bars
+		Toolbars
+		Slider
 
 Nachdenken:
-	pass
+	Layouter muss irgendwie Größe des Contents zurückgeben können, damit man scrollbars ein- und ausblenden kann.
+		Vielleicht als separate Methode? Sodass man die aufrufen kann, bevor man arrange()ed
 
 Bugs:
-	pass
+	Fenster-Resize-Handle kriegt Klicks nicht, wenn ein child die vorher grabbt.
+		Genau so klauen Sub-Fenster die Klicks under der Titlebar vom Hauptfenster
+		=> mousePressed observen, statt onMouseDown und gucken ob self.hovered ~= nil ist (ein child ist gehovert) und dann das Event bearbeiten
+			Kinder bekommen das event trotzdem :/
+		Genau so kann man Fenster grabben, wenn die eigentlich nicht sichtbar sind
 
 Für Doku merken:
 	gui.widgets.setDefault("theme", "dark") um theme zu setzen
