@@ -49,6 +49,8 @@ do
         end
 
         gui.graphics.scissorRect = love.graphics.setScissor
+
+        gui.system = {getTime = love.timer.getTime}
     end
 
     return kraidGUILove

@@ -40,9 +40,6 @@ function module(gui)
 	theme.Window.closeButtonMargin = theme.Window.closeButtonWidth + 5
 	theme.Window.closeButtonPosY = -1
 
-	-- relative
-	theme.Window.childCanvas = {0, theme.Window.titleBarHeight, 0, -theme.Window.titleBarHeight}
-
 	function theme.Window.init(self)
 		self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, self.theme.Window.closeButtonPosY})
 		self.closeButton:setParam("width", self.theme.Window.closeButtonWidth)
@@ -118,7 +115,7 @@ function module(gui)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Window.borderWidth)
 		gui.graphics.drawPolygon({	self.width - self.theme.Window.resizeHandleSize, self.height,
 									self.width, self.height,
-									self.width, self.height - theme.Window.resizeHandleSize})
+									self.width, self.height - self.theme.Window.resizeHandleSize})
 
 		if self.closeButton.visible then
 			gui.widgets.helpers.withCanvas(self.closeButton, function()
@@ -135,6 +132,7 @@ function module(gui)
 	--------------------------------------------------------------------
 	--------------------------------------------------------------------
 	theme.Label = {}
+
 	function theme.Label.draw(self)
 		gui.graphics.setColor(self.theme.colors.text)
 		gui.graphics.text.draw(self.text, 0, 0)
@@ -267,14 +265,14 @@ function module(gui)
 
 	function theme.Numberwheel.init(self)
 		self.breakout = true
-		self.numberInputLine.position = {theme.Numberwheel.textMarginLeft, 0}
-		self.numberInputLine.width = self.width - theme.Numberwheel.textMarginLeft
+		self.numberInputLine.position = {self.theme.Numberwheel.textMarginLeft, 0}
+		self.numberInputLine.width = self.width - self.theme.Numberwheel.textMarginLeft
 		self.numberInputLine.height = self.height
 	end
 
 	function theme.Numberwheel.contains(self, x, y)
-		local rel = {theme.Numberwheel.wheelMarginLeft - x, self.height/2 - y}
-		local radius = self.blownUp and theme.Numberwheel.blownUpRadius or theme.Numberwheel.smallRadius
+		local rel = {self.theme.Numberwheel.wheelMarginLeft - x, self.height/2 - y}
+		local radius = self.blownUp and self.theme.Numberwheel.blownUpRadius or self.theme.Numberwheel.smallRadius
 		return rel[1]*rel[1] + rel[2]*rel[2] < radius*radius
 	end
 
@@ -287,7 +285,7 @@ function module(gui)
 		end
 
 		if self.blownUp then
-			local rel = {theme.Numberwheel.wheelMarginLeft - x, self.height/2 - y}
+			local rel = {self.theme.Numberwheel.wheelMarginLeft - x, self.height/2 - y}
 			print(rel[1], rel[2])
 			local angle = math.atan2(rel[2], rel[1])
 			-- finite difference approximation and linearization (only lowest order)
@@ -297,7 +295,7 @@ function module(gui)
 			dphi = dphi + (math.atan2(rel[2], rel[1] + epsilon) - angle)/epsilon * dx
 
 			-- NOTE: Check here if radius < 1.0 so outside the wheel nothing happens? It's actually quite useful, albeit unintuitive.
-			local radius = math.sqrt(rel[1]*rel[1] + rel[2]*rel[2]) / theme.Numberwheel.blownUpRadius
+			local radius = math.sqrt(rel[1]*rel[1] + rel[2]*rel[2]) / self.theme.Numberwheel.blownUpRadius
 			-- negative sign because I think clockwise increase seems more intuitive
 			self:setParam("value", self.value - dphi * (type(self.speed) == "function" and self.speed(radius) or self.speed) * radius)
 		end
@@ -315,20 +313,21 @@ function module(gui)
 		gui.graphics.setColor(self.theme.colors.border)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
 
-		local radius = self.blownUp and theme.Numberwheel.blownUpRadius or theme.Numberwheel.smallRadius
+		local radius = self.blownUp and self.theme.Numberwheel.blownUpRadius or self.theme.Numberwheel.smallRadius
 		local color = {unpack((hovered(self) or hovered(self.numberInputLine)) and self.theme.colors.objectHighlight or self.theme.colors.object)} -- copy
-		color[4] = self.blownUp and theme.Numberwheel.wheelAlpha or 255
+		color[4] = self.blownUp and self.theme.Numberwheel.wheelAlpha or 255
 		gui.graphics.setColor(color)
-		gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
+		gui.graphics.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
 
 		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32, theme.Numberwheel.wheelBorderThickness)
+		gui.graphics.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32, self.theme.Numberwheel.wheelBorderThickness)
 
 		if self.blownUp then
 			for i = 1, self.theme.Numberwheel.guidelineCount do
 				local speed = function(x) return type(self.speed) == "function" and self.speed(x) or self.speed * x end
 				local radius = speed(1.0 / self.theme.Numberwheel.guidelineCount * (i - 1)) / speed(1.0)
-				gui.graphics.drawCircle(theme.Numberwheel.wheelMarginLeft, self.height/2, radius * theme.Numberwheel.blownUpRadius, 32, theme.Numberwheel.guidelineThickness)
+				gui.graphics.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2,
+										radius * self.theme.Numberwheel.blownUpRadius, 32, self.theme.Numberwheel.guidelineThickness)
 			end
 		end
 
@@ -357,12 +356,13 @@ function module(gui)
 	theme.LineInput.textMargin = 5
 	theme.LineInput.cursorThickness = 1
 	theme.LineInput.cursorHeight = 0.75
-	theme.LineInput.cursorPickPercentage = 0.7 -- the percentage of the character that will result in the cursor being placed left from it
+	theme.LineInput.cursorPickPercentage = 0.7 -- the percentage of the character that will result in the cursor being placed left from it#
+	theme.LineInput.cursorBlinkFreq = 8.0
 
 	function pickLetter(self, x)
 		local getWidth = gui.graphics.text.getWidth
 		for i = 1, self.text:len() do
-			if x < getWidth(self.text:sub(1, i - 1)) + getWidth(self.text:sub(i,i)) * theme.LineInput.cursorPickPercentage + theme.LineInput.textMargin then
+			if x < getWidth(self.text:sub(1, i - 1)) + getWidth(self.text:sub(i,i)) * self.theme.LineInput.cursorPickPercentage + self.theme.LineInput.textMargin then
 				return i - 1
 			end
 		end
@@ -394,24 +394,27 @@ function module(gui)
 		gui.graphics.setColor(self.theme.colors.object)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height)
 
+		-- cursor
 		if self.focused == self then
-			gui.graphics.setColor(self.theme.colors.border)
-			gui.graphics.drawRectangle(	gui.graphics.text.getWidth(self.text:sub(1, self.cursor[1])) + theme.LineInput.textMargin,
-										(1.0 - theme.LineInput.cursorHeight) / 2 * self.height,
-										math.max(gui.graphics.text.getWidth(self.text:sub(self.cursor[1] + 1, self.cursor[2])), theme.LineInput.cursorThickness),
-										self.height * theme.LineInput.cursorHeight)
+			if math.sin(gui.system.getTime() * self.theme.LineInput.cursorBlinkFreq) > 0.0 or self.cursor[1] ~= self.cursor[2] then
+				gui.graphics.setColor(self.theme.colors.border)
+				gui.graphics.drawRectangle(	gui.graphics.text.getWidth(self.text:sub(1, self.cursor[1])) + self.theme.LineInput.textMargin,
+											(1.0 - self.theme.LineInput.cursorHeight) / 2 * self.height,
+											math.max(gui.graphics.text.getWidth(self.text:sub(self.cursor[1] + 1, self.cursor[2])), self.theme.LineInput.cursorThickness),
+											self.height * self.theme.LineInput.cursorHeight)
+			end
 		end
 
 		gui.graphics.setColor(self.theme.colors.text)
-		gui.graphics.text.draw(self.text, theme.LineInput.textMargin, self.height/2 - gui.graphics.text.getHeight()/2)
+		gui.graphics.text.draw(self.text, self.theme.LineInput.textMargin, self.height/2 - gui.graphics.text.getHeight()/2)
 
 		if self.focused == self then
 			gui.graphics.setColor(self.theme.colors.objectHighlight)
-			gui.graphics.drawRectangle(0, 0, self.width, self.height, theme.LineInput.focusBorderThickness)
+			gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.LineInput.focusBorderThickness)
 		end
 
 		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, theme.LineInput.borderThickness)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.LineInput.borderThickness)
 	end
 
 	return theme

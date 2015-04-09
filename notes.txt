@@ -17,6 +17,7 @@ Widgets:
 	x Input Field
 		scrolling, when line is too long for text edit
 	x Number wheel durch Input Box ergänzen
+	Context menu
 	Treeview
 	Slider (vielleicht nicht)
 
