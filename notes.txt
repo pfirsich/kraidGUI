@@ -1,4 +1,6 @@
 Todo:
+	Find a utf-8 library to use and include it into the project
+		https://github.com/alexander-yakushev/awesompd/blob/master/utf8.lua
 	Build a window with a scrollbar (maybe as a subclass even)
 		-> getChildrenDimension ("Think about")
 	Image-functionality in backend
@@ -39,11 +41,7 @@ Think about:
 	Do 'on' callbacks really have to be set first? They are not even called by Base.init? (was I stupid?)
 
 Bugs:
-	Numberwheel Text Input is all kinds of strange (I don't even know what exactly goes wrong)
-	Sometimes the program crashes, saying: 'UTF-8 decoding error: not enough space'. This happens when you try to delete ö,ä,ü
-		https://love2d.org/wiki/utf8
-		https://love2d.org/wiki/love.textinput
-		https://love2d.org/forums/viewtopic.php?f=4&t=8760
+	pass
 
 Für Doku merken:
 	gui.widgets.setDefault("theme", "dark") um theme zu setzen

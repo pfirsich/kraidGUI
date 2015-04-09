@@ -1,3 +1,7 @@
+utf8 = require('utf8')
+local strlen = function(text) return utf8.len(text) end
+local strsub = function(text, from, to) return text:sub(utf8.offset(text, from), to and utf8.offset(text, to+1)-1 or text:len()) end
+
 function module(gui)
     local LineInput = gui.internal.class(gui.widgets.Base)
 
@@ -18,20 +22,20 @@ function module(gui)
     end
 
     function LineInput:selected()
-        return self.text:sub(self.cursor[1] + 1, self.cursor[2])
+        return strsub(self.text, self.cursor[1] + 1, self.cursor[2])
     end
 
     function LineInput:cut()
         if self.cursor[1] ~= self.cursor[2] then
             local sel = self:selected()
-            self.text = self.text:sub(1, self.cursor[1]) .. self.text:sub(self.cursor[2] + 1)
+            self.text = strsub(self.text, 1, self.cursor[1]) .. strsub(self.text, self.cursor[2] + 1)
             self:moveCursor(-1)
             return sel
         end
     end
 
     function LineInput:paste(str)
-        self.text = self.text:sub(1, self.cursor[1]) .. str .. self.text:sub(self.cursor[2] + 1)
+        self.text = strsub(self.text, 1, self.cursor[1]) .. str .. strsub(self.text, self.cursor[2] + 1)
         self.cursor[2] = self.cursor[1]
         self:moveCursor(str:len())
     end
@@ -41,7 +45,7 @@ function module(gui)
         if self.cursor[1] ~= self.cursor[2] then
             cursor = delta > 0 and self.cursor[2] or self.cursor[1]
         else
-            cursor = math.min(self.text:len(), math.max(0, self.cursor[1] + delta))
+            cursor = math.min(strlen(self.text), math.max(0, self.cursor[1] + delta))
         end
         self.cursor[1], self.cursor[2] = cursor, cursor
     end
@@ -79,7 +83,7 @@ function module(gui)
 
     function LineInput:setText(text)
         self.text = text
-        self.cursor = {self.text:len(), self.text:len()}
+        self.cursor = {strlen(self.text), strlen(self.text)}
     end
 
     LineInput.static.setters["text"] = LineInput.setText

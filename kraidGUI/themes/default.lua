@@ -1,3 +1,6 @@
+utf8 = require('utf8')
+local strlen = function(text) return utf8.len(text) end
+local strsub = function(text, from, to) return text:sub(utf8.offset(text, from), to and utf8.offset(text, to+1)-1 or text:len()) end
 
 function module(gui)
 	local theme = {name = "default", author = "Joel Schumacher"}
@@ -375,12 +378,13 @@ function module(gui)
 
 	function pickLetter(self, x)
 		local getWidth = gui.graphics.text.getWidth
-		for i = 1, self.text:len() do
-			if x < getWidth(self.text:sub(1, i - 1)) + getWidth(self.text:sub(i,i)) * self.theme.LineInput.cursorPickPercentage + self.theme.LineInput.textMargin then
+		for i = 1, strlen(self.text) do
+			if x < 	getWidth(strsub(self.text, 1, i - 1)) +
+					getWidth(strsub(self.text, i, i)) * self.theme.LineInput.cursorPickPercentage + self.theme.LineInput.textMargin then
 				return i - 1
 			end
 		end
-		return self.text:len()
+		return strlen(self.text)
 	end
 
 	function theme.LineInput.mouseMove(self, x, y, dx, dy)
@@ -412,9 +416,9 @@ function module(gui)
 		if self.focused == self then
 			if math.sin(gui.system.getTime() * self.theme.LineInput.cursorBlinkFreq) > 0.0 or self.cursor[1] ~= self.cursor[2] then
 				gui.graphics.setColor(self.theme.colors.border)
-				gui.graphics.drawRectangle(	gui.graphics.text.getWidth(self.text:sub(1, self.cursor[1])) + self.theme.LineInput.textMargin,
+				gui.graphics.drawRectangle(	gui.graphics.text.getWidth(strsub(self.text, 1, self.cursor[1])) + self.theme.LineInput.textMargin,
 											(1.0 - self.theme.LineInput.cursorHeight) / 2 * self.height,
-											math.max(gui.graphics.text.getWidth(self.text:sub(self.cursor[1] + 1, self.cursor[2])), self.theme.LineInput.cursorThickness),
+											math.max(gui.graphics.text.getWidth(strsub(self.text, self.cursor[1] + 1, self.cursor[2])), self.theme.LineInput.cursorThickness),
 											self.height * self.theme.LineInput.cursorHeight)
 			end
 		end
