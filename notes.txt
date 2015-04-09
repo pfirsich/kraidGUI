@@ -1,5 +1,5 @@
 Todo:
-	pass
+	Image-Funktionalität im Backend
 
 Widgets:
 	x Windows
@@ -17,13 +17,12 @@ Widgets:
 	x Input Field
 		scrolling, when line is too long for text edit
 	x Number wheel durch Input Box ergänzen
-	Context menu
 	Treeview
-	Slider (vielleicht nicht)
+	Context menu (vielleicht)
+	Slider (eher nicht)
 
 Nachdenken:
-	getTime sollte exposed werden, damit animationen supported werden können
-		=> Möglichkeit bereitstellen nicht-graphics-calls ins backend einzubauen
+	pass
 
 Bugs:
 	pass
