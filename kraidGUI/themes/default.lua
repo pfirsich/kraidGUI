@@ -427,6 +427,65 @@ function module(gui)
 		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.LineInput.borderThickness)
 	end
 
+	--------------------------------------------------------------------
+	--------------------------------------------------------------------
+
+	theme.Scrollbar = {}
+
+	theme.Scrollbar.buttonSize = 20
+	theme.Scrollbar.borderSize = 2
+
+	function theme.Scrollbar.init(self)
+		local size = self.vertical and {self.width, self.theme.Scrollbar.buttonSize} or {self.theme.Scrollbar.buttonSize, self.height}
+		self.buttonMinus = gui.widgets.Button{parent = self, text = "", position = {0, 0}, onClicked = function() self:scrollDown() end, width = size[1], height = size[2]}
+		gui.widgets.helpers.passEvent("onMouseDown", self.buttonMinus, self)
+		self.buttonPlus = gui.widgets.Button{parent = self, text = "", onClicked = function() self:scrollUp() end, width = size[1], height = size[2]}
+		gui.widgets.helpers.passEvent("onMouseDown", self.buttonPlus, self)
+
+		local scrubberTheme = {Button = {}, colors = self.theme.colors}
+		gui.internal.addTableKeys(scrubberTheme.Button, self.theme.Button)
+
+		function scrubberTheme.Button.onMouseDown(scrubber, x, y, button)
+			if button == "l" then
+				scrubber.dragged = true
+				scrubber.lastScrollRelativeScrubberPos = {x, y}
+			end
+			if button == "wu" or button == "wd" then self:onMouseDown(x, y, button) end
+		end
+
+		function scrubberTheme.Button.mouseMove(scrubber, x, y, dx, dy)
+			if scrubber.dragged then
+				local dValue_dXY = 1.0 / (self.length - self.theme.Scrollbar.buttonSize*2 - self.scrubberLength)
+				self.value = math.max(0, math.min(1, self.value + dValue_dXY * (self.vertical and dy or dx)))
+			end
+		end
+
+		function scrubberTheme.Button.mouseReleased(scrubber, x, y, button)
+			if button == "l" then scrubber.dragged = false end
+		end
+
+		self.scrubberLength = 50
+		self.scrubber = gui.widgets.Button{parent = self, text = "", onClicked = function() end, theme = scrubberTheme}
+	end
+
+	function theme.Scrollbar.update(self)
+		local plusPos = self.vertical and {0, self.height - self.theme.Scrollbar.buttonSize} or {self.width - self.theme.Scrollbar.buttonSize, 0}
+		self.buttonPlus:setParam("position", plusPos)
+
+		self.scrubber:setParam(self.vertical and "height" or "width", self.scrubberLength)
+		self.scrubber:setParam(self.vertical and "width" or "height", self.thickness)
+
+		local scrubberPos = self.theme.Scrollbar.buttonSize + self.value * (self.length - self.theme.Scrollbar.buttonSize*2 - self.scrubberLength)
+		self.scrubber:setParam("position", self.vertical and {0, scrubberPos} or {scrubberPos, 0})
+	end
+
+	function theme.Scrollbar.draw(self)
+		gui.graphics.setColor(self.theme.colors.object)
+		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+
+		gui.internal.foreach_array(self.children, function(child) child:draw() end)
+	end
+
 	return theme
 end
 

@@ -1,4 +1,5 @@
 Todo:
+	Fenster mit Scrollbar bauen (vllt. als Subclass)
 	Image-Funktionalität im Backend
 	Cursor-Funktionalität
 
@@ -19,7 +20,7 @@ Widgets:
 		scrolling, when line is too long for text edit
 	x Number wheel durch Input Box ergänzen
 
-	Scroll bars (vertical, horizontal)
+	x Scroll bars (vertical, horizontal)
 	Treeview
 
 	Vielleicht:
@@ -33,6 +34,11 @@ Nachdenken:
 		Vielleicht als separate Methode? Sodass man die aufrufen kann, bevor man arrange()ed
 		Das könnte behindert sein, weil man auch content hat, der nicht gelayoutet ist. Man sollte stattdessen eine Bounding-Box für alle child-Elemente finden können.
 			Man muss dann halt zwei mal layouten
+
+	warum rufe ich beim closeButton im Window nicht einfach :draw auf? statt themeFunction.
+	sollte der closeButton im Window in theme.init erstellt werden?
+
+	scrollBarV und scrollBarH als verschiedene klassen?
 
 Bugs:
 	pass
