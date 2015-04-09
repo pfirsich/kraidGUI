@@ -28,14 +28,17 @@ function love.load()
 
 	sceneWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Scene", position = {100, 100}, width = 300, height = 600, closeable = false}
 
-	subWindowB = gui.widgets.Window{parent = sceneWindow, text = "Child B", position = {50, 50}, width = 100, height = 100, onClose = onClose_subWinA, breakout = true}
+	subWindowB = gui.widgets.Window{parent = sceneWindow, text = "Child B", position = {50, 50}, width = 100, height = 100, onClose = onClose_subWinA, breakout = false}
 	subBLabel = gui.widgets.Label{parent = subWindowB, text = "Label B2", position = {20, 50}}
 
 	subWindowA = gui.widgets.Window{parent = sceneWindow, text = "Child A", position = {100, 100}, width = 200, height = 200}
 	subACheckbox = gui.widgets.Checkbox{parent = subWindowA, position = {5, 120}, checked = true, onChecked = onChecked_checkboxA}
 	subAButton = gui.widgets.Button{parent = subWindowA, text = "Button A", position = {5, 55}, width = 190, height = 35, onClicked = function(button) print("KLICK") end}
 
-	propertiesWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Properties", position = {700, 200}, width = 350, height = 600, closeable = false, minWidth = 250, minHeight = 350}
+	--scollBarV = gui.widgets.Scrollbar{parent = sceneWindow, position = {10, 200}, length = 100, vertical = true}
+	--scollBarH = gui.widgets.Scrollbar{parent = sceneWindow, position = {40, 200}, length = 100, vertical = false}
+
+	propertiesWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Properties", position = {700, 200}, visible = false, width = 350, height = 600, closeable = false, minWidth = 250, minHeight = 350}
 
 	categoryA = gui.widgets.Category{parent = propertiesWindow, text = "Category A", minWidth = 50, inflatedHeight = 200, onCollapse = propCategoryCollapse}
 	categoryB = gui.widgets.Category{parent = propertiesWindow, text = "Category B", minWidth = 50, inflatedHeight = 250, onCollapse = propCategoryCollapse}
@@ -125,9 +128,33 @@ function love.mousereleased(x, y, button)
 	sceneModeGUI:mouseReleased(x, y, button)
 end
 
+function widgetToString(widget)
+	return widget.type .. (widget.text and " (" .. widget.text .. ")" or "")
+end
+
+function mulString(str, n)
+	ret = ""
+	for i = 1, n do
+		ret = ret .. str
+	end
+	return ret
+end
+
+function printHovered(node)
+	if node.hovered then print(widgetToString(node) .. ": " .. widgetToString(node.hovered)) end
+	for i = 1, #node.children do
+		printHovered(node.children[i])
+	end
+end
+
 function love.mousemoved(x, y, dx, dy)
 	-- these are two different things, because I want every event to be completely symmetric and behave the same no matter where it was called
+	print("*******************************")
 	sceneModeGUI:pickHovered(x, y)
+
+	print("-------------------------------")
+	printHovered(sceneModeGUI)
+
 	sceneModeGUI:mouseMove(x, y, dx, dy)
 end
 
@@ -166,7 +193,11 @@ function love.draw()
 
 	love.graphics.print("subWindowB visible " .. tostring(subWindowB.visible), 0, 20)
 
+	if sceneModeGUI.hovered then
+		love.graphics.print("Hovered: " .. widgetToString(sceneModeGUI.hovered), 0, 60)
+	end
+
 	if sceneModeGUI.focused then
-		love.graphics.print("Focused: " .. (sceneModeGUI.focused.text or sceneModeGUI.focused.type), 0, 40)
+		love.graphics.print("Focused: " .. widgetToString(sceneModeGUI.focused), 0, 40)
 	end
 end

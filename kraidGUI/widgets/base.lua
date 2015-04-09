@@ -119,6 +119,7 @@ function module(gui)
     function Base:textInput(self, text) end -- stub
 
     function Base:onMouseDown(x, y, button)
+        print("onMouseDown", self.type, self.text)
         self:toTop()
         self.clicked = true
         self:getGrandParent():setSubTree("focused", self)
@@ -164,7 +165,10 @@ function module(gui)
     -- some parts of the GUI had quite some amount of magic, but now it's this function that's by far the most magical.
     -- TODO: comment this more
     function Base:pickHovered(x, y, filtered)
-        self.hovered = nil
+        -- because the loops breaks for every child that claims the hover, all children have to be reset before.
+        -- otherwise there will be multiple hovered objects in one tree.
+        -- this way of doing it is not particularly efficient, because leafs will be resettet a number of times equal to their depth, but that's not a big issue
+        self:setSubTree("hovered", nil)
 
         if self.visible and self.enabled then
             gui.widgets.helpers.withCanvas(self, function(child)
@@ -174,20 +178,17 @@ function module(gui)
                 if not childrenFilter then
                     -- childrenFilter is different from contains, because you still want the widget to be hovered in not-filtered areas not occupied by child
                     -- so toTop() works properly and hovered in generall is set correctly
-                    local themeFilter = gui.widgets.helpers.callThemeFunction(self, "childrenFilter", unpack(localMouse))
-                    if themeFilter == nil then
+                    childrenFilter = gui.widgets.helpers.callThemeFunction(self, "childrenFilter", unpack(localMouse))
+                    if childrenFilter == nil then
                         childrenFilter = self.position and self.width and self.height and not gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
-                    else
-                        childrenFilter = themeFilter
                     end
                 end
 
                 self.hovered = gui.internal.foreach_array(self.children, function(child)
-                    local hovered = child:pickHovered(x, y, childrenFilter)
-                    if hovered ~= nil then
-                        return child -- will break if ~= nil
-                    end
+                    return child:pickHovered(x, y, childrenFilter) -- will break ~= nil
                 end, true)
+                print(self.type .. "(" .. tostring(self) .. ")")
+                print("children:", self.hovered)
 
                 if self.hovered == nil and (not filtered or self.breakout) then
                     local hovered = gui.widgets.helpers.callThemeFunction(self, "contains", unpack(localMouse))
@@ -197,6 +198,8 @@ function module(gui)
 
                     if hovered then self.hovered = self end
                 end
+
+                print("self:", self.hovered)
             end)
         end
 
