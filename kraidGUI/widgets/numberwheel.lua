@@ -13,9 +13,9 @@ function module(gui)
 
         -- again this object is constructed first, because it can't be with a parent given, because Base.init has to be called first. Also Base.init will
         -- call setValue and therefore set the text in this widget.
-        local onChangeLine = function(inputLine)
-            inputLine.text = inputLine.text:gsub("[^%d.]", "")
-            self:setValue(tonumber(inputLine.text) or 0.0)
+        local onChangeLine = function(inputLine, before)
+            if tonumber(inputLine.text) == nil then return true end -- if the current text can not be tonumber-ed, reject changes
+            self:setValue(tonumber(inputLine.text))
         end
 
         self.numberInputLine = gui.widgets.LineInput{parent = nil, onChange = onChangeLine}

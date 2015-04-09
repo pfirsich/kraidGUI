@@ -46,10 +46,19 @@ function module(gui)
         self.cursor[1], self.cursor[2] = cursor, cursor
     end
 
+    function LineInput:changeText(func)
+        local before = self.text
+        local beforeCursor = {self.cursor[1], self.cursor[2]}
+        func()
+        if self.onChange and self:onChange(before) then
+            self.text = before
+            self.cursor = beforeCursor
+        end
+    end
+
     function LineInput:textInput(text)
         print("'" .. text .. "'")
-        self:paste(text)
-        if self.onChange then self:onChange() end
+        self:changeText(function() self:paste(text) end)
     end
 
     function LineInput:keyPressed(key, isrepeat)
@@ -59,12 +68,12 @@ function module(gui)
         if key == "right" then self:moveCursor(1) end
 
         if key == "backspace" then
-            if self.cursor[1] == self.cursor[2] then
-                self.cursor[1] = math.max(self.cursor[1] - 1, 0)
-            end
-            self:cut()
-
-            if self.onChange then self:onChange() end
+            self:changeText(function()
+                if self.cursor[1] == self.cursor[2] then
+                    self.cursor[1] = math.max(self.cursor[1] - 1, 0)
+                end
+                self:cut()
+            end)
         end
     end
 
