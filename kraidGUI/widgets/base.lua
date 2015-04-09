@@ -126,7 +126,6 @@ function module(gui)
     end
 
     function Base:onMouseUp(x, y, button)
-        self.clicked = false
         gui.widgets.helpers.callThemeFunction(self, "onMouseUp", x, y, button)
     end
 
@@ -154,6 +153,7 @@ function module(gui)
     end
 
     function Base:mouseReleased(x, y, button)
+        self:setSubTree("clicked", false) -- not very efficient
         passMouseEvent(self, "mouseReleased", x, y, function(self, x, y, button) self:onMouseUp(x, y, button) end, button)
     end
 
