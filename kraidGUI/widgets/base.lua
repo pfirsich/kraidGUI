@@ -119,7 +119,6 @@ function module(gui)
     function Base:textInput(self, text) end -- stub
 
     function Base:onMouseDown(x, y, button)
-        print("onMouseDown", self.type, self.text)
         self:toTop()
         self.clicked = true
         self:getGrandParent():setSubTree("focused", self)
@@ -187,8 +186,6 @@ function module(gui)
                 self.hovered = gui.internal.foreach_array(self.children, function(child)
                     return child:pickHovered(x, y, childrenFilter) -- will break ~= nil
                 end, true)
-                print(self.type .. "(" .. tostring(self) .. ")")
-                print("children:", self.hovered)
 
                 if self.hovered == nil and (not filtered or self.breakout) then
                     local hovered = gui.widgets.helpers.callThemeFunction(self, "contains", unpack(localMouse))
@@ -198,8 +195,6 @@ function module(gui)
 
                     if hovered then self.hovered = self end
                 end
-
-                print("self:", self.hovered)
             end)
         end
 

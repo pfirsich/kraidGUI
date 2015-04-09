@@ -38,7 +38,7 @@ function love.load()
 	--scollBarV = gui.widgets.Scrollbar{parent = sceneWindow, position = {10, 200}, length = 100, vertical = true}
 	--scollBarH = gui.widgets.Scrollbar{parent = sceneWindow, position = {40, 200}, length = 100, vertical = false}
 
-	propertiesWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Properties", position = {700, 200}, visible = false, width = 350, height = 600, closeable = false, minWidth = 250, minHeight = 350}
+	propertiesWindow = gui.widgets.Window{parent = sceneModeGUI, text = "Properties", position = {700, 200}, width = 350, height = 600, closeable = false, minWidth = 250, minHeight = 350}
 
 	categoryA = gui.widgets.Category{parent = propertiesWindow, text = "Category A", minWidth = 50, inflatedHeight = 200, onCollapse = propCategoryCollapse}
 	categoryB = gui.widgets.Category{parent = propertiesWindow, text = "Category B", minWidth = 50, inflatedHeight = 250, onCollapse = propCategoryCollapse}
@@ -132,29 +132,9 @@ function widgetToString(widget)
 	return widget.type .. (widget.text and " (" .. widget.text .. ")" or "")
 end
 
-function mulString(str, n)
-	ret = ""
-	for i = 1, n do
-		ret = ret .. str
-	end
-	return ret
-end
-
-function printHovered(node)
-	if node.hovered then print(widgetToString(node) .. ": " .. widgetToString(node.hovered)) end
-	for i = 1, #node.children do
-		printHovered(node.children[i])
-	end
-end
-
 function love.mousemoved(x, y, dx, dy)
 	-- these are two different things, because I want every event to be completely symmetric and behave the same no matter where it was called
-	print("*******************************")
 	sceneModeGUI:pickHovered(x, y)
-
-	print("-------------------------------")
-	printHovered(sceneModeGUI)
-
 	sceneModeGUI:mouseMove(x, y, dx, dy)
 end
 
