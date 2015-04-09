@@ -18,7 +18,7 @@ function module(gui)
     end
 
     function LineInput:selected()
-        return self.text:sub(unpack(self.cursor))
+        return self.text:sub(self.cursor[1] + 1, self.cursor[2])
     end
 
     function LineInput:cut()

@@ -137,6 +137,20 @@ function love.keypressed(key, isrepeat)
 	if sceneModeGUI.focused then
 		sceneModeGUI.focused:keyPressed(key, isrepeat)
 	end
+
+	if love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl") then
+		if sceneModeGUI.focused and sceneModeGUI.focused.type == "LineInput" then
+			if key == "x" then
+				love.system.setClipboardText(sceneModeGUI.focused:cut())
+			end
+			if key == "c" then
+				love.system.setClipboardText(sceneModeGUI.focused:selected())
+			end
+			if key == "v" then
+				sceneModeGUI.focused:paste(love.system.getClipboardText())
+			end
+		end
+	end
 end
 
 function love.draw()
