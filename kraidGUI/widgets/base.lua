@@ -1,4 +1,7 @@
-function module(gui)
+--- Base Widget
+-- @submodule Base
+
+function getModule(gui)
     local Base = gui.internal.class()
 
     function Base:init(params)
@@ -9,27 +12,27 @@ function module(gui)
         gui.internal.addTableKeys(set, gui.widgets._defaultParameters)
         if params then gui.internal.addTableKeys(set, params) end
 
-        gui.internal.foreach(set, function(param, value)
-            self:setParam(param, value)
-        end)
+        for k, v in pairs(set) do
+            self:setParam(k, v)
+        end
     end
 
     function Base:update()
         if self.visible and self.enabled then
-            gui.widgets.helpers.withCanvas(self, function()
-                gui.widgets.helpers.callThemeFunction(self, "update")
+            gui.internal.withCanvas(self, function()
+                gui.internal.callThemeFunction(self, "update")
 
-                gui.internal.foreach_array(self.children, function(child)
-                    child:update()
-                end, true)
+                for i = #self.children, 1, -1 do
+                    self.children[i]:update()
+                end
             end)
         end
     end
 
     function Base:draw()
         if self.visible and not self.virtual then
-            gui.widgets.helpers.withCanvas(self, function()
-                gui.widgets.helpers.callThemeFunction(self, "draw")
+            gui.internal.withCanvas(self, function()
+                gui.internal.callThemeFunction(self, "draw")
             end)
         end
     end
@@ -67,8 +70,8 @@ function module(gui)
             self.hovered = self.parent.hovered
             self.focused = self.parent.focused
 
-            for _, child in ipairs(self.children) do
-                child:setVisible(self.visible)
+            for i = 1, #self.children do
+                self.children[i]:setVisible(self.visible)
             end
         end
     end
@@ -114,8 +117,8 @@ function module(gui)
 
     function Base:setSubTree(key, value)
         self[key] = value
-        for _, child in ipairs(self.children) do
-            child:setSubTree(key, value)
+        for i = 1, #self.children do
+            self.children[i]:setSubTree(key, value)
         end
     end
 
@@ -126,27 +129,27 @@ function module(gui)
         self:toTop()
         self.clicked = true
         self:getGrandParent():setSubTree("focused", self)
-        gui.widgets.helpers.callThemeFunction(self, "onMouseDown", x, y, button)
+        gui.internal.callThemeFunction(self, "onMouseDown", x, y, button)
     end
 
     function Base:onMouseUp(x, y, button)
-        gui.widgets.helpers.callThemeFunction(self, "onMouseUp", x, y, button)
+        gui.internal.callThemeFunction(self, "onMouseUp", x, y, button)
     end
 
     local function passMouseEvent(self, name, x, y, hoveredFunc, ...)
         if self.visible and self.enabled then
             local args = {...}
-            return gui.widgets.helpers.withCanvas(self, function()
+            return gui.internal.withCanvas(self, function()
                 local localMouse = gui.internal.toLocal(x, y)
-                gui.widgets.helpers.callThemeFunction(self, name, localMouse[1], localMouse[2], unpack(args))
+                gui.internal.callThemeFunction(self, name, localMouse[1], localMouse[2], unpack(args))
 
                 if self.visible and self.enabled and self.hovered == self then
                     hoveredFunc(self, localMouse[1], localMouse[2], unpack(args))
                 end
 
-                gui.internal.foreach_array(self.children, function(child)
-                    child[name](child, x, y, unpack(args))
-                end, true)
+                for i = #self.children, 1, -1 do
+                    self.children[i][name](self.children[i], x, y, unpack(args))
+                end
             end)
         end
         return false
@@ -174,25 +177,27 @@ function module(gui)
         self:setSubTree("hovered", nil)
 
         if self.visible and self.enabled then
-            gui.widgets.helpers.withCanvas(self, function(child)
+            gui.internal.withCanvas(self, function(child)
                 local localMouse = gui.internal.toLocal(x, y)
 
                 local childrenFilter = filtered
                 if not childrenFilter then
                     -- childrenFilter is different from contains, because you still want the widget to be hovered in not-filtered areas not occupied by child
                     -- so toTop() works properly and hovered in generall is set correctly
-                    childrenFilter = gui.widgets.helpers.callThemeFunction(self, "childrenFilter", unpack(localMouse))
+                    childrenFilter = gui.internal.callThemeFunction(self, "childrenFilter", unpack(localMouse))
                     if childrenFilter == nil then
                         childrenFilter = self.position and self.width and self.height and not gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
                     end
                 end
 
-                self.hovered = gui.internal.foreach_array(self.children, function(child)
-                    return child:pickHovered(x, y, childrenFilter) -- will break ~= nil
-                end, true)
+                self.hovered = nil
+                for i = #self.children, 1, -1 do
+                    self.hovered = self.children[i]:pickHovered(x, y, childrenFilter)
+                    if self.hovered then break end
+                end
 
                 if self.hovered == nil and (not filtered or self.breakout) then
-                    local hovered = gui.widgets.helpers.callThemeFunction(self, "contains", unpack(localMouse))
+                    local hovered = gui.internal.callThemeFunction(self, "contains", unpack(localMouse))
                     if hovered == nil then
                         hovered = self.position and self.width and self.height and gui.internal.inRect(localMouse, {0, 0, self.width, self.height})
                     end
@@ -217,4 +222,4 @@ function module(gui)
     return Base
 end
 
-return module
+return getModule

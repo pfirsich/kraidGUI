@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local Checkbox = gui.internal.class(gui.widgets.Base)
 
     function Checkbox:init(params)
@@ -10,7 +13,7 @@ function module(gui)
         self.checked = false
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     function Checkbox:onMouseDown(x, y, button)
@@ -28,4 +31,4 @@ function module(gui)
     return Checkbox
 end
 
-return module
+return getModule

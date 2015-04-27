@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local Window = gui.internal.class(gui.widgets.Base)
 
     function Window:init(params)
@@ -12,7 +15,7 @@ function module(gui)
         self.resizeable = false
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     Window.static.setters["closeable"] = Window.setCloseable
@@ -20,4 +23,4 @@ function module(gui)
     return Window
 end
 
-return module
+return getModule

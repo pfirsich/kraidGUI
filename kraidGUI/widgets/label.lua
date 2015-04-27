@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local Label = gui.internal.class(gui.widgets.Base)
 
     function Label:init(params)
@@ -8,12 +11,13 @@ function module(gui)
         self:setText("Label")
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     function Label:setText(text)
-        self.width = gui.graphics.text.getWidth(text)
-        self.height = gui.graphics.text.getHeight()
+        -- NOTE: This should probably go into the theme
+        self.width = gui.backend.text.getWidth(text)
+        self.height = gui.backend.text.getHeight()
         self.text = text
     end
 
@@ -22,4 +26,4 @@ function module(gui)
     return Label
 end
 
-return module
+return getModule

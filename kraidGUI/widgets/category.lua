@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local Category = gui.internal.class(gui.widgets.Base)
 
     function Category:init(params)
@@ -13,7 +16,7 @@ function module(gui)
         self.collapsed = false
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     function Category:setCollapsed(collapsed)
@@ -43,4 +46,4 @@ function module(gui)
     return Category
 end
 
-return module
+return getModule

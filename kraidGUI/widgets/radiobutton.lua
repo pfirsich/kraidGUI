@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local Radiobutton = gui.internal.class(gui.widgets.Base)
 
     function Radiobutton:init(params)
@@ -10,7 +13,7 @@ function module(gui)
         self.checked = false
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     function Radiobutton:onMouseDown(x, y, button)
@@ -38,4 +41,4 @@ function module(gui)
     return Radiobutton
 end
 
-return module
+return getModule

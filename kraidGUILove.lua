@@ -2,13 +2,13 @@ do
     local kraidGUILove = {}
 
     function kraidGUILove.init(gui)
-        gui.graphics = {}
+        gui.backend = {}
 
-        function gui.graphics.setColor(r, g, b, a) -- this should also be able to take a table
+        function gui.backend.setColor(r, g, b, a) -- this should also be able to take a table
             love.graphics.setColor(r, g, b, a or 255)
         end
 
-        function drawShape(func, lineWidth, ...)
+        local function drawShape(func, lineWidth, ...)
             love.graphics.push()
             love.graphics.translate(unpack(gui.internal.origin()))
             if lineWidth then
@@ -22,38 +22,36 @@ do
             love.graphics.pop()
         end
 
-        function gui.graphics.drawRectangle(x, y, w, h, lineWidth)
+        function gui.backend.drawRectangle(x, y, w, h, lineWidth)
             drawShape(love.graphics.rectangle, lineWidth, x, y, w, h)
         end
 
-        function gui.graphics.drawCircle(x, y, radius, segments, lineWidth)
+        function gui.backend.drawCircle(x, y, radius, segments, lineWidth)
             drawShape(love.graphics.circle, lineWidth, x, y, radius, segments)
         end
 
-        function gui.graphics.drawPolygon(points, lineWidth)
+        function gui.backend.drawPolygon(points, lineWidth)
             drawShape(love.graphics.polygon, lineWidth, points)
         end
 
-        gui.graphics.text = {}
-        function gui.graphics.text.getHeight()
+        gui.backend.text = {}
+        function gui.backend.text.getHeight()
             return love.graphics.getFont():getHeight()
         end
 
-        function gui.graphics.text.getWidth(text)
+        function gui.backend.text.getWidth(text)
             return love.graphics.getFont():getWidth(text)
         end
 
-        function gui.graphics.text.draw(text, x, y)
+        function gui.backend.text.draw(text, x, y)
             local origin = gui.internal.origin()
             love.graphics.print(text, x + origin[1], y + origin[2])
         end
 
-        gui.graphics.scissorRect = love.graphics.setScissor
+        gui.backend.scissorRect = love.graphics.setScissor
 
-        gui.system = {
-            getTime = love.timer.getTime,
-            keyDown = love.keyboard.isDown,
-        }
+        gui.backend.getTime = love.timer.getTime
+        gui.backend.keyDown = love.keyboard.isDown
     end
 
     return kraidGUILove

@@ -52,10 +52,10 @@ function love.load()
 
 	hiddenCheckbox = gui.widgets.Checkbox{parent = categoryA}
 	hiddenCheckboxLabel = gui.widgets.Label{parent = categoryA, text = "hidden"}
-	gui.widgets.helpers.passEvent("onMouseDown", hiddenCheckboxLabel, hiddenCheckbox)
+	gui.widgets.passEvent("onMouseDown", hiddenCheckboxLabel, hiddenCheckbox)
 	enabledCheckbox = gui.widgets.Checkbox{parent = categoryA}
 	enabledCheckboxLabel = gui.widgets.Label{parent = categoryA, text = "enabled"}
-	gui.widgets.helpers.passEvent("onMouseDown", enabledCheckboxLabel, enabledCheckbox)
+	gui.widgets.passEvent("onMouseDown", enabledCheckboxLabel, enabledCheckbox)
 	loadButton = gui.widgets.Button{parent = categoryA, text = "Load", height = 30, minWidth = 50}
 	saveButton = gui.widgets.Button{parent = categoryA, text = "Save", height = 30, minWidth = 50}
 	saveAsButton = gui.widgets.Button{parent = categoryA, text = "Save As..", height = 30, minWidth = 50}
@@ -77,11 +77,11 @@ function love.load()
 
 	objectModeRadio = gui.widgets.Radiobutton{parent = categoryB, checked = true}
 	objectModeRadioLabel = gui.widgets.Label{parent = categoryB, text = "Object Mode"}
-	gui.widgets.helpers.passEvent("onMouseDown", objectModeRadioLabel, objectModeRadio)
+	gui.widgets.passEvent("onMouseDown", objectModeRadioLabel, objectModeRadio)
 
 	vertexModeRadio = gui.widgets.Radiobutton{parent = categoryB}
 	vertexModeRadioLabel = gui.widgets.Label{parent = categoryB, text = "Vertex Mode"}
-	gui.widgets.helpers.passEvent("onMouseDown", vertexModeRadioLabel, vertexModeRadio)
+	gui.widgets.passEvent("onMouseDown", vertexModeRadioLabel, vertexModeRadio)
 
 	numberWheelLabel = gui.widgets.Label{parent = categoryB, text = "Arbitrary Number"}
 	local onChange = function(wheel, value) sceneWindow.position[1] = sceneWindow.position[1] + value - wheel.value end

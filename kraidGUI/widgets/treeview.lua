@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local TreeView = gui.internal.class(gui.widgets.Base)
 
     function TreeView:init(params)
@@ -16,7 +19,7 @@ function module(gui)
         self.selected = {}
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     -- linearized in a depth-first manner. the output therefore resembles the rendered, fully uncollapsed tree read from top to bottom
@@ -53,4 +56,4 @@ function module(gui)
     return TreeView
 end
 
-return module
+return getModule

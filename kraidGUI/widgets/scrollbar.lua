@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local Scrollbar = gui.internal.class(gui.widgets.Base)
 
     function Scrollbar:init(params)
@@ -12,7 +15,7 @@ function module(gui)
         self:setParam("thickness", 20)
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
 
         self:setParam("length", self.length)
         self:setParam("thickness", self.thickness)
@@ -48,4 +51,4 @@ function module(gui)
     return Scrollbar
 end
 
-return module
+return getModule

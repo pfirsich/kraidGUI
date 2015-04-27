@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local Numberwheel = gui.internal.class(gui.widgets.Base)
 
     function Numberwheel:init(params)
@@ -21,7 +24,7 @@ function module(gui)
         self.numberInputLine = gui.widgets.LineInput{parent = nil, onChange = onChangeLine}
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
 
         self.numberInputLine:setParam("parent", self)
         self.numberInputLine:setParam("text", tostring(self.value))
@@ -40,4 +43,4 @@ function module(gui)
     return Numberwheel
 end
 
-return module
+return getModule

@@ -1,4 +1,7 @@
-function module(gui)
+--- Test
+-- @module test
+
+function getModule(gui)
     local Line = gui.internal.class(gui.widgets.Base)
 
     function Line:init(params)
@@ -10,10 +13,10 @@ function module(gui)
         self.minWidth = 0
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     return Line
 end
 
-return module
+return getModule

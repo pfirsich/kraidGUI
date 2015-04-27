@@ -1,4 +1,7 @@
-function module(gui)
+--- Button widget
+-- @module ButtonWidget
+
+function getModule(gui)
     local Button = gui.internal.class(gui.widgets.Base)
 
     function Button:init(params)
@@ -9,7 +12,7 @@ function module(gui)
         self.height = 20
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     function Button:onMouseUp(x, y, button)
@@ -22,4 +25,4 @@ function module(gui)
     return Button
 end
 
-return module
+return getModule

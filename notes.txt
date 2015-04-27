@@ -1,6 +1,13 @@
 Todo:
 	Find a utf-8 library to use and include it into the project
 		https://github.com/alexander-yakushev/awesompd/blob/master/utf8.lua
+
+	Write documentation
+		Example application for a simple widget (-> main.lua)
+		How to add a new widget
+			in theme + a new file in widgets.lua and also outline how to do it from the outside
+			also how you can add a new theme, using any library function you want
+
 	Build a window with a scrollbar (maybe as a subclass even)
 		-> getChildrenDimension ("Think about")
 	Image-functionality in backend
@@ -42,7 +49,7 @@ Bugs:
 	pass
 
 Für Doku merken:
-	gui.widgets.setDefault("theme", "dark") um theme zu setzen
+	gui.widgets.setDefaultParameter("theme", "dark") um theme zu setzen
 	setParam verwenden, wenn möglich oder am Anfang übergeben
 	widget.enabled nicht vergessen
 	Bei der Parameterliste am Anfang kann man nie wissen in welcher Reihenfolge die gesetzt werden (wegen pairs()).

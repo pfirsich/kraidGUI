@@ -1,8 +1,11 @@
-utf8 = require('utf8')
+--- The default theme for kraidGUI
+-- @getModule defaultTheme
+
+utf8 = require('utf8') -- TODO: Remove this and replace with a separate utf-8 library (this is only available because of löve)
 local strlen = function(text) return utf8.len(text) end
 local strsub = function(text, from, to) return text:sub(utf8.offset(text, from), to and utf8.offset(text, to+1)-1 or text:len()) end
 
-function module(gui)
+function getModule(gui)
 	local theme = {name = "default", author = "Joel Schumacher"}
 
 	theme.colors = { -- inspired by https://love2d.org/forums/viewtopic.php?f=5&t=75614 (Gray)
@@ -17,18 +20,18 @@ function module(gui)
 
 	local hovered = function(self) return self.hovered == self end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 	theme.Base = {}
 
 	function theme.Base.draw(self)
-		gui.internal.foreach_array(self.children, function(child)
-			child:draw()
-		end)
+		for i = 1, #self.children do
+			self.children[i]:draw()
+		end
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 	theme.Window = {}
 
 	theme.Window.titleBarBorder = 0
@@ -119,44 +122,44 @@ function module(gui)
 	end
 
 	function theme.Window.draw(self)
-		gui.graphics.setColor(self.theme.colors.background)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+		gui.backend.setColor(self.theme.colors.background)
+		gui.backend.drawRectangle(0, 0, self.width, self.height)
 
-		gui.internal.foreach_array(self.children, function(child)
-			if not child.breakout then child:draw() end
-		end)
+		for i = 1, #self.children do
+			if not self.children[i].breakout then self.children[i]:draw() end
+		end
 
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawRectangle(	self.theme.Window.titleBarBorder, self.theme.Window.titleBarBorder,
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawRectangle(	self.theme.Window.titleBarBorder, self.theme.Window.titleBarBorder,
 									self.width - self.theme.Window.titleBarBorder * 2,
 									self.theme.Window.titleBarHeight - self.theme.Window.titleBarBorder * 2)
 
-		gui.graphics.setColor(self.theme.colors.text)
-		gui.graphics.text.draw(self.text, self.theme.Window.titleOffsetX, self.theme.Window.titleBarHeight/2 - gui.graphics.text.getHeight()/2)
+		gui.backend.setColor(self.theme.colors.text)
+		gui.backend.text.draw(self.text, self.theme.Window.titleOffsetX, self.theme.Window.titleBarHeight/2 - gui.backend.text.getHeight()/2)
 
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Window.borderWidth)
-		gui.graphics.drawPolygon({	self.width - self.theme.Window.resizeHandleSize, self.height,
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.Window.borderWidth)
+		gui.backend.drawPolygon({	self.width - self.theme.Window.resizeHandleSize, self.height,
 									self.width, self.height,
 									self.width, self.height - self.theme.Window.resizeHandleSize})
 
-		gui.internal.foreach_array(self.children, function(child)
-			if child.breakout then child:draw() end
-		end)
+		for i = 1, #self.children do
+			if self.children[i].breakout then self.children[i]:draw() end
+		end
 	end
 
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 	theme.Label = {}
 
 	function theme.Label.draw(self)
-		gui.graphics.setColor(self.theme.colors.text)
-		gui.graphics.text.draw(self.text, 0, 0)
+		gui.backend.setColor(self.theme.colors.text)
+		gui.backend.text.draw(self.text, 0, 0)
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 	theme.Button = {}
 
 	theme.Button.borderWidth = 2
@@ -165,17 +168,17 @@ function module(gui)
 		local bg = self.clicked and self.theme.colors.objectHighlight or (hovered(self) and self.theme.colors.object or self.theme.colors.border)
 		local border = self.clicked and self.theme.colors.border or self.theme.colors.objectHighlight
 
-		gui.graphics.setColor(bg)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height)
-		gui.graphics.setColor(border)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Button.borderWidth)
+		gui.backend.setColor(bg)
+		gui.backend.drawRectangle(0, 0, self.width, self.height)
+		gui.backend.setColor(border)
+		gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.Button.borderWidth)
 
-		gui.graphics.setColor(self.theme.colors.text)
-		gui.graphics.text.draw(self.text, self.width/2 - gui.graphics.text.getWidth(self.text)/2, self.height/2 - gui.graphics.text.getHeight()/2)
+		gui.backend.setColor(self.theme.colors.text)
+		gui.backend.text.draw(self.text, self.width/2 - gui.backend.text.getWidth(self.text)/2, self.height/2 - gui.backend.text.getHeight()/2)
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 
 	theme.Checkbox = {}
 
@@ -184,23 +187,23 @@ function module(gui)
 	theme.Checkbox.hoverLineWidth = 2
 
 	function theme.Checkbox.draw(self)
-		gui.graphics.setColor(self.theme.colors.object)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height)
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Checkbox.borderWidth)
+		gui.backend.setColor(self.theme.colors.object)
+		gui.backend.drawRectangle(0, 0, self.width, self.height)
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.Checkbox.borderWidth)
 
 		local w, h = self.width * self.theme.Checkbox.checkSizeFactor, self.height * self.theme.Checkbox.checkSizeFactor
 		local x, y = self.width/2 - w/2, self.height/2 - h/2
 
-		gui.graphics.setColor(self.theme.colors.marked)
-		if self.checked then gui.graphics.drawRectangle(x, y, w, h) end
+		gui.backend.setColor(self.theme.colors.marked)
+		if self.checked then gui.backend.drawRectangle(x, y, w, h) end
 
-		gui.graphics.setColor(self.theme.colors.border)
-		if hovered(self) then gui.graphics.drawRectangle(x, y, w, h, self.theme.Checkbox.hoverLineWidth) end
+		gui.backend.setColor(self.theme.colors.border)
+		if hovered(self) then gui.backend.drawRectangle(x, y, w, h, self.theme.Checkbox.hoverLineWidth) end
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 
 	theme.Radiobutton = {}
 
@@ -220,20 +223,20 @@ function module(gui)
 		local centerX, centerY = self.width/2, self.height/2
 		local radius = math.min(self.width, self.height)/2 - 1
 
-		gui.graphics.setColor(self.theme.colors.object)
-		gui.graphics.drawCircle(centerX, centerY, radius, 16)
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawCircle(centerX, centerY, radius, 16, self.theme.Radiobutton.borderWidth)
+		gui.backend.setColor(self.theme.colors.object)
+		gui.backend.drawCircle(centerX, centerY, radius, 16)
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawCircle(centerX, centerY, radius, 16, self.theme.Radiobutton.borderWidth)
 
-		gui.graphics.setColor(self.theme.colors.marked)
-		if self.checked then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16) end
+		gui.backend.setColor(self.theme.colors.marked)
+		if self.checked then gui.backend.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16) end
 
-		gui.graphics.setColor(self.theme.colors.border)
-		if hovered(self) then gui.graphics.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16, self.theme.Radiobutton.hoverLineWidth) end
+		gui.backend.setColor(self.theme.colors.border)
+		if hovered(self) then gui.backend.drawCircle(centerX, centerY, radius * self.theme.Radiobutton.checkSizeFactor, 16, self.theme.Radiobutton.hoverLineWidth) end
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 
 	theme.Category = {}
 
@@ -249,24 +252,24 @@ function module(gui)
 	end
 
 	function theme.Category.draw(self)
-		gui.graphics.setColor(self.collapsed and self.theme.colors.object or self.theme.colors.objectHighlight)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height)
-		gui.graphics.setColor(self.theme.colors.text)
-		gui.graphics.text.draw(self.text, theme.Category.textMarginLeft, self.collapsedHeight/2 - gui.graphics.text.getHeight()/2)
+		gui.backend.setColor(self.collapsed and self.theme.colors.object or self.theme.colors.objectHighlight)
+		gui.backend.drawRectangle(0, 0, self.width, self.height)
+		gui.backend.setColor(self.theme.colors.text)
+		gui.backend.text.draw(self.text, theme.Category.textMarginLeft, self.collapsedHeight/2 - gui.backend.text.getHeight()/2)
 
 		if not self.collapsed then
-			gui.graphics.setColor(self.theme.colors.background)
-			gui.graphics.drawRectangle(	self.theme.Category.borderThickness, self.collapsedHeight + self.theme.Category.borderThickness,
+			gui.backend.setColor(self.theme.colors.background)
+			gui.backend.drawRectangle(	self.theme.Category.borderThickness, self.collapsedHeight + self.theme.Category.borderThickness,
 										self.width - self.theme.Category.borderThickness*2, self.height - self.collapsedHeight - self.theme.Category.borderThickness*2)
 
-			gui.internal.foreach_array(self.children, function(child)
-				child:draw()
-			end)
+			for i = 1, #self.children do
+				self.children[i]:draw()
+			end
 		end
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 
 	theme.Numberwheel = {}
 
@@ -327,44 +330,44 @@ function module(gui)
 	end
 
 	function theme.Numberwheel.draw(self)
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
 
 		local radius = self.blownUp and self.theme.Numberwheel.blownUpRadius or self.theme.Numberwheel.smallRadius
 		local color = {unpack((hovered(self) or hovered(self.numberInputLine)) and self.theme.colors.markedHighlight or self.theme.colors.marked)} -- copy
 		color[4] = self.blownUp and self.theme.Numberwheel.wheelAlpha or 255
-		gui.graphics.setColor(color)
-		gui.graphics.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
+		gui.backend.setColor(color)
+		gui.backend.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
 
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32, self.theme.Numberwheel.wheelBorderThickness)
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32, self.theme.Numberwheel.wheelBorderThickness)
 
 		if self.blownUp then
 			for i = 1, self.theme.Numberwheel.guidelineCount do
 				local speed = function(x) return type(self.speed) == "function" and self.speed(x) or self.speed * x end
 				local radius = speed(1.0 / self.theme.Numberwheel.guidelineCount * (i - 1)) / speed(1.0)
-				gui.graphics.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2,
+				gui.backend.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2,
 										radius * self.theme.Numberwheel.blownUpRadius, 32, self.theme.Numberwheel.guidelineThickness)
 			end
 		end
 
-		gui.widgets.helpers.withCanvas(self.numberInputLine, function()
-			gui.widgets.helpers.callThemeFunction(self.numberInputLine, "draw")
+		gui.internal.withCanvas(self.numberInputLine, function()
+			gui.internal.callThemeFunction(self.numberInputLine, "draw")
 		end)
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 
 	theme.Line = {}
 
 	function theme.Line.draw(self)
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawRectangle(0, 0, self.width, self.height)
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 
 	theme.LineInput = {}
 
@@ -377,7 +380,7 @@ function module(gui)
 	theme.LineInput.cursorBlinkFreq = 8.0
 
 	function pickLetter(self, x)
-		local getWidth = gui.graphics.text.getWidth
+		local getWidth = gui.backend.text.getWidth
 		for i = 1, strlen(self.text) do
 			if x < 	getWidth(strsub(self.text, 1, i - 1)) +
 					getWidth(strsub(self.text, i, i)) * self.theme.LineInput.cursorPickPercentage + self.theme.LineInput.textMargin then
@@ -409,34 +412,34 @@ function module(gui)
 	end
 
 	function theme.LineInput.draw(self)
-		gui.graphics.setColor(self.theme.colors.object)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+		gui.backend.setColor(self.theme.colors.object)
+		gui.backend.drawRectangle(0, 0, self.width, self.height)
 
 		-- cursor
 		if self.focused == self then
-			if math.sin(gui.system.getTime() * self.theme.LineInput.cursorBlinkFreq) > 0.0 or self.cursor[1] ~= self.cursor[2] then
-				gui.graphics.setColor(self.theme.colors.border)
-				gui.graphics.drawRectangle(	gui.graphics.text.getWidth(strsub(self.text, 1, self.cursor[1])) + self.theme.LineInput.textMargin,
+			if math.sin(gui.backend.getTime() * self.theme.LineInput.cursorBlinkFreq) > 0.0 or self.cursor[1] ~= self.cursor[2] then
+				gui.backend.setColor(self.theme.colors.border)
+				gui.backend.drawRectangle(	gui.backend.text.getWidth(strsub(self.text, 1, self.cursor[1])) + self.theme.LineInput.textMargin,
 											(1.0 - self.theme.LineInput.cursorHeight) / 2 * self.height,
-											math.max(gui.graphics.text.getWidth(strsub(self.text, self.cursor[1] + 1, self.cursor[2])), self.theme.LineInput.cursorThickness),
+											math.max(gui.backend.text.getWidth(strsub(self.text, self.cursor[1] + 1, self.cursor[2])), self.theme.LineInput.cursorThickness),
 											self.height * self.theme.LineInput.cursorHeight)
 			end
 		end
 
-		gui.graphics.setColor(self.theme.colors.text)
-		gui.graphics.text.draw(self.text, self.theme.LineInput.textMargin, self.height/2 - gui.graphics.text.getHeight()/2)
+		gui.backend.setColor(self.theme.colors.text)
+		gui.backend.text.draw(self.text, self.theme.LineInput.textMargin, self.height/2 - gui.backend.text.getHeight()/2)
 
 		if self.focused == self then
-			gui.graphics.setColor(self.theme.colors.objectHighlight)
-			gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.LineInput.focusBorderThickness)
+			gui.backend.setColor(self.theme.colors.objectHighlight)
+			gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.LineInput.focusBorderThickness)
 		end
 
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.LineInput.borderThickness)
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.LineInput.borderThickness)
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 
 	theme.Scrollbar = {}
 
@@ -445,9 +448,9 @@ function module(gui)
 
 	function theme.Scrollbar.init(self)
 		self.buttonMinus = gui.widgets.Button{parent = self, text = "", position = {0, 0}, onClicked = function() self:scrollDown() end}
-		gui.widgets.helpers.passEvent("onMouseDown", self.buttonMinus, self)
+		gui.widgets.passEvent("onMouseDown", self.buttonMinus, self)
 		self.buttonPlus = gui.widgets.Button{parent = self, text = "", onClicked = function() self:scrollUp() end}
-		gui.widgets.helpers.passEvent("onMouseDown", self.buttonPlus, self)
+		gui.widgets.passEvent("onMouseDown", self.buttonPlus, self)
 
 		local scrubberTheme = {Button = {}, colors = self.theme.colors}
 		gui.internal.addTableKeys(scrubberTheme.Button, self.theme.Button)
@@ -493,14 +496,16 @@ function module(gui)
 	end
 
 	function theme.Scrollbar.draw(self)
-		gui.graphics.setColor(self.theme.colors.object)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height)
+		gui.backend.setColor(self.theme.colors.object)
+		gui.backend.drawRectangle(0, 0, self.width, self.height)
 
-		gui.internal.foreach_array(self.children, function(child) child:draw() end)
+		for i = 1, #self.children do
+			self.children[i]:draw()
+		end
 	end
 
-	--------------------------------------------------------------------
-	--------------------------------------------------------------------
+	--******************************************************************
+	--******************************************************************
 
 	theme.TreeView = {}
 
@@ -559,7 +564,7 @@ function module(gui)
 				if x > 0 and x < theme.TreeView.textMarginLeft then
 					self.straightenedTree[index].collapsed = not self.straightenedTree[index].collapsed
 				else
-					if (gui.system.keyDown("lshift") or gui.system.keyDown("rshift")) and self.multiSelect then
+					if (gui.backend.keyDown("lshift") or gui.backend.keyDown("rshift")) and self.multiSelect then
 						self.selected[#self.selected+1] = self.straightenedTree[index]
 					else
 						self.selected = {self.straightenedTree[index]}
@@ -573,10 +578,10 @@ function module(gui)
 	end
 
 	function theme.TreeView.draw(self)
-		gui.graphics.setColor(self.theme.colors.object)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height)
-		gui.graphics.setColor(self.theme.colors.border)
-		gui.graphics.drawRectangle(0, 0, self.width, self.height, self.theme.TreeView.borderThickness)
+		gui.backend.setColor(self.theme.colors.object)
+		gui.backend.drawRectangle(0, 0, self.width, self.height)
+		gui.backend.setColor(self.theme.colors.border)
+		gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.TreeView.borderThickness)
 
 		local y = self.theme.TreeView.marginTop - self.scroll
 		for i = 1, #self.straightenedTree do
@@ -589,21 +594,21 @@ function module(gui)
 				if node == self.selected[i] then selected = true; break end
 			end
 			if selected then
-				gui.graphics.setColor(self.theme.colors.border)
-				gui.graphics.drawRectangle(	theme.TreeView.selectionMarginLeftRight, y,
+				gui.backend.setColor(self.theme.colors.border)
+				gui.backend.drawRectangle(	theme.TreeView.selectionMarginLeftRight, y,
 											self.width - theme.TreeView.selectionMarginLeftRight*2, self.theme.TreeView.elementHeight)
 			end
 
 			if node.children and #node.children > 0 then
-				gui.graphics.setColor(self.theme.colors.objectHighlight)
+				gui.backend.setColor(self.theme.colors.objectHighlight)
 				local radius = node.collapsed and self.theme.TreeView.bigCircleRadius or self.theme.TreeView.smallCircleRadius
-				gui.graphics.drawCircle(self.theme.TreeView.circleMarginLeft + x,
+				gui.backend.drawCircle(self.theme.TreeView.circleMarginLeft + x,
 										self.theme.TreeView.elementHeight/2 + y,
 										radius, 16, self.theme.TreeView.circleThickness)
 			end
 
-			gui.graphics.setColor(self.theme.colors.text)
-			gui.graphics.text.draw(node.text, self.theme.TreeView.textMarginLeft + x, self.theme.TreeView.elementHeight/2 - gui.graphics.text.getHeight()/2 + y)
+			gui.backend.setColor(self.theme.colors.text)
+			gui.backend.text.draw(node.text, self.theme.TreeView.textMarginLeft + x, self.theme.TreeView.elementHeight/2 - gui.backend.text.getHeight()/2 + y)
 
 			y = y + self.theme.TreeView.elementHeight
 		end
@@ -614,4 +619,4 @@ function module(gui)
 	return theme
 end
 
-return module
+return getModule

@@ -1,5 +1,9 @@
+--- Layouters usable with kraidGUI.
+-- At the moment tjere is only LineLayout.
+-- @getModule layout
+
 do
-    function module(gui)
+    function getModule(gui)
         -- TODO: Vertical resizing?
         local LineLayout = gui.internal.class()
 
@@ -103,5 +107,5 @@ do
         gui.layouts.LineLayout = LineLayout
     end
 
-    return module
+    return getModule
 end

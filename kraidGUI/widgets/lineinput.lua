@@ -1,8 +1,11 @@
+--- Test
+-- @module test
+
 utf8 = require('utf8')
 local strlen = function(text) return utf8.len(text) end
 local strsub = function(text, from, to) return text:sub(utf8.offset(text, from), to and utf8.offset(text, to+1)-1 or text:len()) end
 
-function module(gui)
+function getModule(gui)
     local LineInput = gui.internal.class(gui.widgets.Base)
 
     function LineInput:init(params)
@@ -14,7 +17,7 @@ function module(gui)
         self.cursor = {0,0}
 
         gui.widgets.Base.init(self, params)
-        gui.widgets.helpers.callThemeFunction(self, "init")
+        gui.internal.callThemeFunction(self, "init")
     end
 
     function LineInput:select(from, to)
@@ -91,4 +94,4 @@ function module(gui)
     return LineInput
 end
 
-return module
+return getModule
