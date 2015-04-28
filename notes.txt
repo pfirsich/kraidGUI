@@ -2,20 +2,6 @@ Todo:
 	Find a utf-8 library to use and include it into the project
 		https://github.com/alexander-yakushev/awesompd/blob/master/utf8.lua ?
 
-	Write documentation
-		For expanding:
-			Example application for a simple widget (-> main.lua)
-			How to add a new widget
-				in theme + a new file in widgets.lua and also outline how to do it from the outside
-				also how you can add a new theme, using any library function you want
-			Outline the general flow of events and information, children, rect-parameters and canvases and coordinate systems
-			modules
-		For using:
-			how to create widgets: pass named arguments, unsure about the order (because of pairs) -> only set parameters that are independent
-				otherwise: multiple calls to setParam, which should also be used as often as possible
-			setDefaultParameter
-			theme as property
-
 	Build a window with a scrollbar (maybe as a subclass even)
 		-> getChildrenDimension ("Think about")
 	Image-functionality in backend

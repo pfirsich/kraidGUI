@@ -26,6 +26,9 @@ do
         return ret
     end
 
+    -- This generates a class with an optional base.
+    -- The generated class can be instanced by calling it, which calls the class:init() method of it.
+    -- For an example usage see the gui.internal.Stack class.
     function gui.internal.class(base)
         local cls = {}
         cls.__index = cls
