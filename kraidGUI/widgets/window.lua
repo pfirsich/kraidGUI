@@ -1,6 +1,3 @@
---- Test
--- @module test
-
 function getModule(gui)
     local Window = gui.internal.class(gui.widgets.Base)
 

@@ -1,6 +1,3 @@
---- Base Widget
--- @submodule Base
-
 function getModule(gui)
     local Base = gui.internal.class()
 

@@ -1,6 +1,3 @@
---- Test
--- @module test
-
 function getModule(gui)
     local Line = gui.internal.class(gui.widgets.Base)
 

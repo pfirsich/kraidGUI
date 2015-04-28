@@ -1,16 +1,8 @@
---- Widgets
---- =====================
---- A widget is essentially a small container for relevant data and an abstraction that should be bound to the actual visual represantation as loosely as possible.
---- Mostly it just encapsulates the minimum necessary data and corresponding methods.
----
---- For an example of this, see a rather slim widget like :ref:`Button`. Also note that all widgets should derive from :ref:`Base`, preferably using the class-generator function
-
 function getModule(gui)
     gui.widgets = {}
-    --- ### default parameters
     gui.widgets._defaultParameters = {
         visible = true,
-        enabled = true, --- * enabled: this is just a mode of display/interactivity (disabled as in 'greyed-out' - will not be updated) - not implemented in "default"-theme.
+        enabled = true, -- this is just a mode of display/interactivity (disabled as in 'greyed-out' - will not be updated) - not implemented in "default"-theme.
         virtual = false, -- will only be updated, but not drawn
         breakout = false, -- these widgets will be drawn without being confined by it's parents boundaries. also they are drawn over all other child widgets of their parent!
     }

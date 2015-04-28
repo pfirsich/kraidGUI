@@ -1,26 +1,19 @@
 do
-    --****************************** GUI
-    --**********************************
-
     local gui = {}
 
     function gui.getTheme(name) return require(name)(gui) end
 
-    --************************* INTERNAL
-    --**********************************
+
+
     -- Objects in internal are supposed to only be used by GUI code (e.g. this library of anyone extending/modyfing it)
     gui.internal = {}
 
-    --- ..function:: addTableKeys(to, from)
-    ---     This function sets all keys in 'to' to the values in 'from'. This is not a table.copy, since it leaves keys missing in from unchanged and does not work recursively. It is mainly used internally, but can be used if needed.
     function gui.internal.addTableKeys(to, from)
         for k, v in pairs(from) do
             to[k] = v
         end
     end
 
-    --- ..function:: tableDeepCopy(tbl)
-    ---      This function copies the table recursively
     function gui.internal.tableDeepCopy(tbl)
         local ret = {}
         for k, v in pairs(tbl) do
@@ -33,8 +26,6 @@ do
         return ret
     end
 
-    --- .. function:: class(base)
-    ---     This function generates a new class (a table) that derives from base (no multiple inheritance supported), which may be 
     function gui.internal.class(base)
         local cls = {}
         cls.__index = cls
@@ -101,11 +92,9 @@ do
         return point[1] >= rect[1] and point[1] <= rect[1] + rect[3] and point[2] >= rect[2] and point[2] <= rect[2] + rect[4]
     end
 
-    --**********************************
-    --**********************************
+
 
     require("kraidGUI.widgets")(gui)
-
     gui.widgets.setDefaultParameter("theme", gui.getTheme("kraidGUI.themes.default"))
 
     require("kraidGUI.layouts")(gui)

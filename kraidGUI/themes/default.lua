@@ -1,6 +1,3 @@
---- The default theme for kraidGUI
--- @getModule defaultTheme
-
 utf8 = require('utf8') -- TODO: Remove this and replace with a separate utf-8 library (this is only available because of löve)
 local strlen = function(text) return utf8.len(text) end
 local strsub = function(text, from, to) return text:sub(utf8.offset(text, from), to and utf8.offset(text, to+1)-1 or text:len()) end

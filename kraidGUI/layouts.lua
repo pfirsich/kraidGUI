@@ -1,7 +1,3 @@
---- Layouters usable with kraidGUI.
--- At the moment tjere is only LineLayout.
--- @getModule layout
-
 do
     function getModule(gui)
         -- TODO: Vertical resizing?

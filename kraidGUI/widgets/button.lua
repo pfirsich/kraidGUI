@@ -1,6 +1,3 @@
---- Button widget
--- @module ButtonWidget
-
 function getModule(gui)
     local Button = gui.internal.class(gui.widgets.Base)
 

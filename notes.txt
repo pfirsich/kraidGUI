@@ -1,18 +1,34 @@
 Todo:
 	Find a utf-8 library to use and include it into the project
-		https://github.com/alexander-yakushev/awesompd/blob/master/utf8.lua
+		https://github.com/alexander-yakushev/awesompd/blob/master/utf8.lua ?
 
 	Write documentation
-		Example application for a simple widget (-> main.lua)
-		How to add a new widget
-			in theme + a new file in widgets.lua and also outline how to do it from the outside
-			also how you can add a new theme, using any library function you want
+		For expanding:
+			Example application for a simple widget (-> main.lua)
+			How to add a new widget
+				in theme + a new file in widgets.lua and also outline how to do it from the outside
+				also how you can add a new theme, using any library function you want
+			Outline the general flow of events and information, children, rect-parameters and canvases and coordinate systems
+			modules
+		For using:
+			how to create widgets: pass named arguments, unsure about the order (because of pairs) -> only set parameters that are independent
+				otherwise: multiple calls to setParam, which should also be used as often as possible
+			setDefaultParameter
+			theme as property
 
 	Build a window with a scrollbar (maybe as a subclass even)
 		-> getChildrenDimension ("Think about")
 	Image-functionality in backend
 	Cursor-support in backend
 	Mutliple font support
+
+Think about:
+	For showing/hiding scrollbars widgets should be able to determine a bounding box of their children
+	Some things have to be handled in theme.update, but they shouldn't. Maybe have the possibility for setters to be called for themes?
+	Should vertical and horizontal scrollbars be different classes? (I think so, but I'm too lazy)
+
+Bugs:
+	pass
 
 Widgets:
 	x Windows
@@ -37,23 +53,3 @@ Widgets:
 		Menu bars
 		Toolbars
 		Slider
-
-Think about:
-	For showing/hiding scrollbars widgets should be able to determine a bounding box of their children
-
-	Some things have to be handled in theme.update, but they shouldn't maybe have the possibility for setters to be called for themes?
-
-	Should vertical and horizontal scrollbars be different classes? (I think yes, but I'm too lazy)
-
-Bugs:
-	pass
-
-Für Doku merken:
-	gui.widgets.setDefaultParameter("theme", "dark") um theme zu setzen
-	setParam verwenden, wenn möglich oder am Anfang übergeben
-	widget.enabled nicht vergessen
-	Bei der Parameterliste am Anfang kann man nie wissen in welcher Reihenfolge die gesetzt werden (wegen pairs()).
-	Man darf also nur Dinger setzen, die unabhängig voneinander sind. Ansonsten braucht man mehrere calls zu setParam.
-
------------ Wirre Notizen:
-	pass

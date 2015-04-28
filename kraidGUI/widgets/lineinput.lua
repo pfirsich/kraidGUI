@@ -1,6 +1,3 @@
---- Test
--- @module test
-
 utf8 = require('utf8')
 local strlen = function(text) return utf8.len(text) end
 local strsub = function(text, from, to) return text:sub(utf8.offset(text, from), to and utf8.offset(text, to+1)-1 or text:len()) end

@@ -1,6 +1,3 @@
---- Test
--- @module test
-
 function getModule(gui)
     local Radiobutton = gui.internal.class(gui.widgets.Base)
 
