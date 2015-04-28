@@ -3,6 +3,6 @@ GUI framework implemented in Lua. Can be used with different backends, a löve2d
 kraidGUI is made for programmers who want to make a GUI and should be a framework to easily change the appereance/behaviour of widgets or add custom ones without much work.
 In essence it is supposed to be the starting point for any GUI programmed in Lua with a default implementation of a dark design and a backend for löve2D, though any backend can easily plugged into it.
 
-I'm currently in the process of writing documentation.
+Documentation is currently work in progress and can be found here: [Wiki](https://github.com/pfirsich/kraidGUI/wiki)
 
 ![Screenshot](https://raw.githubusercontent.com/pfirsich/kraidGUI/master/screenshot.png)
