@@ -29,6 +29,22 @@ do
             table.insert(self.lines[#self.lines].widgets, {object = widget, parameters = params or {}})
         end
 
+        function LineLayout:removeWidget(widget, removeEmptyLine)
+            removeEmptyLine = removeEmptyLine ~= nil and removeEmptyLine or true
+            for lineInd = #self.lines, 1, -1 do 
+                for widInd = #self.lines[lineInd].widgets, 1, -1 do 
+                    if widget == self.lines[lineInd].widgets[widInd].object then 
+                        table.remove(self.lines[lineInd].widgets, widInd)
+                        if #self.lines[lineInd].widgets == 0 and removeEmptyLine then 
+                            table.remove(self.lines, lineInd)
+                        end 
+                        return true
+                    end 
+                end 
+            end 
+            return false -- not found
+        end 
+
         function LineLayout:arrange()
             local parameterStack = gui.internal.Stack()
             parameterStack:push(self.defaultParameters)
@@ -65,32 +81,36 @@ do
                 local sizeUpCount = 0
 
                 for index, widget in ipairs(self.lines[line].widgets) do
-                    parameterStack:pushParams(widget.parameters)
+                    if widget.object.visible then 
+                        parameterStack:pushParams(widget.parameters)
 
-                    height = math.max(height, widget.object.height)
-                    sizeUp[index] = 0 -- because with numbers I don't need type conversion later
-                    if widget.object.minWidth or widget.object.maxWidth then
-                        width = width + (widget.object.minWidth or 0)
-                        sizeUp[index] = 1
-                        sizeUpCount = sizeUpCount + 1
-                        widget.object.width = widget.object.minWidth or 0
-                    else
-                        width = width + widget.object.width
+                        height = math.max(height, widget.object.height)
+                        sizeUp[index] = 0 -- because with numbers I don't need type conversion later
+                        if widget.object.minWidth or widget.object.maxWidth then
+                            width = width + (widget.object.minWidth or 0)
+                            sizeUp[index] = 1
+                            sizeUpCount = sizeUpCount + 1
+                            widget.object.width = widget.object.minWidth or 0
+                        else
+                            width = width + widget.object.width
+                        end
+                        if index < #self.lines[line].widgets then width = width + parameterStack:getParam("spacing-horizontal") end
+
+                        parameterStack:pop()
                     end
-                    if index < #self.lines[line].widgets then width = width + parameterStack:getParam("spacing-horizontal") end
-
-                    parameterStack:pop()
                 end
 
                 for index, widget in ipairs(self.lines[line].widgets) do
-                    parameterStack:pushParams(widget.parameters)
+                    if widget.object.visible then 
+                        parameterStack:pushParams(widget.parameters)
 
-                    -- math.floor because thin lines don't like being drawn between pixels! (button-outlines would flicker)
-                    widget.object.position = {math.floor(cursorX), math.floor(cursorY + height/2 - widget.object.height/2)}
-                    widget.object:setParam("width", math.floor(widget.object.width + sizeUp[index] * math.max(0, (totalWidth - width)) / math.max(1, sizeUpCount)))
-                    cursorX = cursorX + widget.object.width + parameterStack:getParam("spacing-horizontal")
+                        -- math.floor because thin lines don't like being drawn between pixels! (button-outlines would flicker)
+                        widget.object.position = {math.floor(cursorX), math.floor(cursorY + height/2 - widget.object.height/2)}
+                        widget.object:setParam("width", math.floor(widget.object.width + sizeUp[index] * math.max(0, (totalWidth - width)) / math.max(1, sizeUpCount)))
+                        cursorX = cursorX + widget.object.width + parameterStack:getParam("spacing-horizontal")
 
-                    parameterStack:pop()
+                        parameterStack:pop()
+                    end
                 end
 
                 cursorY = cursorY + height + parameterStack:getParam("spacing-vertical")
