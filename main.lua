@@ -163,6 +163,7 @@ function love.update()
 end
 
 function love.mousepressed(x, y, button)
+    sceneModeGUI:getGrandParent():setSubTree("focused", nil)
 	sceneModeGUI:mousePressed(x, y, button)
 end
 

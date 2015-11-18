@@ -11,7 +11,7 @@ function getModule(gui)
 
         -- tree elements are tables, you must not use (as in: do something else with it) these keys: text, children, collapsed, id, depth
         -- also you must not write the latter two as they are computed by setTree
-        self.tree = {}
+        self.tree = {children = {}}
         self.linearizedTree = {}
         self.selected = {}
 
@@ -42,9 +42,8 @@ function getModule(gui)
         self:linearizeTree(self.linearizedTree)
     end
 
-    function TreeView:setTree(tree)
+    function TreeView:setTree(tree) 
         self.tree = tree
-        self.selected = {}
         self:updateTree()
     end
 

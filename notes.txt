@@ -1,9 +1,16 @@
 Todo:
 	Find a utf-8 library to use and include it into the project
 		https://github.com/alexander-yakushev/awesompd/blob/master/utf8.lua ?
+        
+    Multi-Line text output
+    Get BoundingBox of Children
+    Drag&Drop for TreeView
+
+    Docs: Repeat everything you need to know in "Add a theme" and "Add a widget" and don't require reading the introduction
 
 	Build a window with a scrollbar (maybe as a subclass even)
 		-> getChildrenDimension ("Think about")
+        
 	Image-functionality in backend
 	Cursor-support in backend
 	Mutliple font support
