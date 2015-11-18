@@ -24,14 +24,14 @@ function getModule(gui)
     end
 
     function gui.internal.withCanvas(rectWidgetLike, func, breakout)
-        if rectWidgetLike and rectWidgetLike.position and rectWidgetLike.width and rectWidgetLike.height then
+        if rectWidgetLike and rectWidgetLike.position then
             local x, y, w, h = rectWidgetLike.position[1], rectWidgetLike.position[2], rectWidgetLike.width, rectWidgetLike.height
             gui.internal.pushCanvas(x, y, w, h, rectWidgetLike.breakout)
         end
 
         local ret = func()
 
-        if rectWidgetLike and rectWidgetLike.position and rectWidgetLike.width and rectWidgetLike.height then
+        if rectWidgetLike and rectWidgetLike.position then
             gui.internal.popCanvas()
         end
 

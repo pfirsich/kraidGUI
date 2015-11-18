@@ -13,10 +13,10 @@ function getModule(gui)
     end
 
     function Button:onMouseUp(x, y, button)
-        gui.widgets.Base.onMouseUp(self, x, y, button)
-        if button == "l" then
+        if self.clicked and button == "l" then
             if self.onClicked then self:onClicked() end
         end
+        gui.widgets.Base.onMouseUp(self, x, y, button)
     end
 
     return Button
