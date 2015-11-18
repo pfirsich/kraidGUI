@@ -84,7 +84,6 @@ function getModule(gui)
             self.width = clamp(self.width + dx, self.minWidth, self.maxWidth)
             self.height = clamp(self.height + dy, self.minHeight, self.maxHeight)
             if self.onResize then self:onResize() end
-            self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, 0})
         end
     end
 
@@ -102,7 +101,7 @@ function getModule(gui)
             end
 
             local fromCorner = {self.width - x, self.height - y}
-            if fromCorner[1] + fromCorner[2] < self.theme.Window.resizeHandleSize then
+            if self.resizable and fromCorner[1] + fromCorner[2] < self.theme.Window.resizeHandleSize then
                 self.resized = true
             end
         end
@@ -119,6 +118,8 @@ function getModule(gui)
     end
 
     function theme.Window.draw(self)
+        self.closeButton:setParam("position", {self.width - self.theme.Window.closeButtonMargin, 0})
+
         gui.backend.setColor(self.theme.colors.background)
         gui.backend.drawRectangle(0, 0, self.width, self.height)
 
@@ -136,9 +137,12 @@ function getModule(gui)
 
         gui.backend.setColor(self.theme.colors.border)
         gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.Window.borderWidth)
-        gui.backend.drawPolygon({   self.width - self.theme.Window.resizeHandleSize, self.height,
-                                    self.width, self.height,
-                                    self.width, self.height - self.theme.Window.resizeHandleSize})
+
+        if self.resizable then 
+            gui.backend.drawPolygon({   self.width - self.theme.Window.resizeHandleSize, self.height,
+                                        self.width, self.height,
+                                        self.width, self.height - self.theme.Window.resizeHandleSize})
+        end
 
         for i = 1, #self.children do
             if self.children[i].breakout then self.children[i]:draw() end
@@ -273,7 +277,7 @@ function getModule(gui)
     theme.Numberwheel.borderThickness = 2
     theme.Numberwheel.wheelBorderThickness = 2
     theme.Numberwheel.smallRadius = 5
-    theme.Numberwheel.blownUpRadius = 100
+    theme.Numberwheel.blownUpRadius = 20
     theme.Numberwheel.wheelMarginLeft = theme.Numberwheel.smallRadius + 5
     theme.Numberwheel.textMarginLeft = theme.Numberwheel.smallRadius + theme.Numberwheel.wheelMarginLeft + 5
     theme.Numberwheel.guidelineCount = 6
@@ -281,7 +285,7 @@ function getModule(gui)
     theme.Numberwheel.wheelAlpha = 150
 
     function theme.Numberwheel.init(self)
-        self.breakout = true
+        self.breakout = false
         self.numberInputLine.position = {self.theme.Numberwheel.textMarginLeft, 0}
         self.numberInputLine.width = self.width - self.theme.Numberwheel.textMarginLeft
         self.numberInputLine.height = self.height
@@ -303,7 +307,6 @@ function getModule(gui)
 
         if self.blownUp then
             local rel = {self.theme.Numberwheel.wheelMarginLeft - x, self.height/2 - y}
-            print(rel[1], rel[2])
             local angle = math.atan2(rel[2], rel[1])
             -- finite difference approximation and linearization (only lowest order)
             local dphi = 0
@@ -311,19 +314,22 @@ function getModule(gui)
             dphi = dphi + (math.atan2(rel[2] + epsilon, rel[1]) - angle)/epsilon * dy
             dphi = dphi + (math.atan2(rel[2], rel[1] + epsilon) - angle)/epsilon * dx
 
-            -- NOTE: Check here if radius < 1.0 so outside the wheel nothing happens? It's actually quite useful, albeit unintuitive.
             local radius = math.sqrt(rel[1]*rel[1] + rel[2]*rel[2]) / self.theme.Numberwheel.blownUpRadius
-            -- negative sign because I think clockwise increase seems more intuitive
-            self:setParam("value", self.value - dphi * (type(self.speed) == "function" and self.speed(radius) or self.speed) * radius)
+
+            if radius > 1.0 then 
+                -- negative sign because I think clockwise increase seems more intuitive
+                self:setParam("value", self.value - dphi * (type(self.speed) == "function" and self.speed(radius) or self.speed))
+                self:updateText()
+            end
         end
     end
 
     function theme.Numberwheel.onMouseDown(self, x, y, button)
-        if button == "l" then self.blownUp = true end
+        if button == "l" then self.blownUp = true; self.breakout = true end
     end
 
     function theme.Numberwheel.mouseReleased(self, x, y, button)
-        if button == "l" then self.blownUp = false end
+        if button == "l" then self.blownUp = false; self.breakout = false end
     end
 
     function theme.Numberwheel.draw(self)
@@ -331,22 +337,13 @@ function getModule(gui)
         gui.backend.drawRectangle(0, 0, self.width, self.height, self.theme.Numberwheel.borderThickness)
 
         local radius = self.blownUp and self.theme.Numberwheel.blownUpRadius or self.theme.Numberwheel.smallRadius
-        local color = {unpack((hovered(self) or hovered(self.numberInputLine)) and self.theme.colors.markedHighlight or self.theme.colors.marked)} -- copy
+        local color = {unpack(self.theme.colors.marked)} -- copy
         color[4] = self.blownUp and self.theme.Numberwheel.wheelAlpha or 255
         gui.backend.setColor(color)
         gui.backend.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32)
 
         gui.backend.setColor(self.theme.colors.border)
         gui.backend.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2, radius, 32, self.theme.Numberwheel.wheelBorderThickness)
-
-        if self.blownUp then
-            for i = 1, self.theme.Numberwheel.guidelineCount do
-                local speed = function(x) return type(self.speed) == "function" and self.speed(x) or self.speed * x end
-                local radius = speed(1.0 / self.theme.Numberwheel.guidelineCount * (i - 1)) / speed(1.0)
-                gui.backend.drawCircle(self.theme.Numberwheel.wheelMarginLeft, self.height/2,
-                                        radius * self.theme.Numberwheel.blownUpRadius, 32, self.theme.Numberwheel.guidelineThickness)
-            end
-        end
 
         gui.internal.withCanvas(self.numberInputLine, function()
             gui.internal.callThemeFunction(self.numberInputLine, "draw")
@@ -442,6 +439,7 @@ function getModule(gui)
 
     theme.Scrollbar.buttonSize = 20
     theme.Scrollbar.borderSize = 2
+    theme.Scrollbar.scrubberMargin = 1
 
     function theme.Scrollbar.init(self)
         self.buttonMinus = gui.widgets.Button{parent = self, text = "", position = {0, 0}, onClicked = function() self:scrollDown() end}
@@ -462,8 +460,12 @@ function getModule(gui)
 
         function scrubberTheme.Button.mouseMove(scrubber, x, y, dx, dy)
             if scrubber.dragged then
-                local dValue_dXY = 1.0 / (self.length - self.theme.Scrollbar.buttonSize*2 - self.scrubberLength)
-                self.value = math.max(0, math.min(1, self.value + dValue_dXY * (self.vertical and dy or dx)))
+                local scrollSpace = self.length - self.theme.Scrollbar.buttonSize*2 - self.scrubberLength
+                if scrollSpace > 0 then 
+                    local dValue_dXY = 1.0 / scrollSpace
+                    self.value = math.max(0, math.min(1, self.value + dValue_dXY * (self.vertical and dy or dx)))
+                    if self.onChange then self:onChange() end
+                end
             end
         end
 
@@ -485,11 +487,11 @@ function getModule(gui)
         local plusPos = self.vertical and {0, self.height - self.theme.Scrollbar.buttonSize} or {self.width - self.theme.Scrollbar.buttonSize, 0}
         self.buttonPlus:setParam("position", plusPos)
 
-        self.scrubber:setParam(self.vertical and "height" or "width", self.scrubberLength)
-        self.scrubber:setParam(self.vertical and "width" or "height", self.thickness)
+        self.scrubber:setParam(self.vertical and "height" or "width", self.scrubberLength - theme.Scrollbar.scrubberMargin * 2)
+        self.scrubber:setParam(self.vertical and "width" or "height", self.thickness - theme.Scrollbar.scrubberMargin * 2)
 
-        local scrubberPos = self.theme.Scrollbar.buttonSize + self.value * (self.length - self.theme.Scrollbar.buttonSize*2 - self.scrubberLength)
-        self.scrubber:setParam("position", self.vertical and {0, scrubberPos} or {scrubberPos, 0})
+        local scrubberPos = self.theme.Scrollbar.buttonSize + self.value * (self.length - self.theme.Scrollbar.buttonSize*2 - self.scrubberLength) + theme.Scrollbar.scrubberMargin
+        self.scrubber:setParam("position", self.vertical and {theme.Scrollbar.scrubberMargin, scrubberPos} or {scrubberPos, theme.Scrollbar.scrubberMargin})
     end
 
     function theme.Scrollbar.draw(self)
@@ -561,7 +563,7 @@ function getModule(gui)
                 if x > 0 and x < theme.TreeView.textMarginLeft then
                     self.straightenedTree[index].collapsed = not self.straightenedTree[index].collapsed
                 else
-                    if (gui.backend.keyDown("lshift") or gui.backend.keyDown("rshift")) and self.multiSelect then
+                    if (gui.backend.keyDown("lctrl") or gui.backend.keyDown("rctrl")) and self.multiSelect then
                         self.selected[#self.selected+1] = self.straightenedTree[index]
                     else
                         self.selected = {self.straightenedTree[index]}
