@@ -34,6 +34,19 @@ function getModule(gui)
         end
     end
 
+    function Base:getChildrenBBox() 
+        local minX, minY, maxX, maxY = math.huge, math.huge, -math.huge, -math.huge
+        for i, child in ipairs(self.children) do 
+            if child.position and child.width and child.height then 
+                minX = math.min(child.position[1], minX)
+                minY = math.min(child.position[2], minY)
+                maxX = math.max(child.position[1] + child.width, maxX)
+                maxY = math.max(child.position[2] + child.height, maxY)
+            end 
+        end 
+        return minX, minY, maxX, maxY
+    end
+
     function Base:setParam(name, value)
         if self.static.setters[name] then
             self.static.setters[name](self, value)
@@ -119,13 +132,13 @@ function getModule(gui)
         end
     end
 
-    function Base:keyPressed(self, key, isrepeat) end -- stub
-    function Base:textInput(self, text) end -- stub
+    function Base:keyPressed(key, isrepeat) end -- stub
+    function Base:textInput(text) end -- stub
 
     function Base:onMouseDown(x, y, button)
         self:toTop()
         self.clicked = true
-        self:getGrandParent():setSubTree("focused", self)
+        self:focus(self)
         gui.internal.callThemeFunction(self, "onMouseDown", x, y, button)
     end
 
@@ -152,13 +165,32 @@ function getModule(gui)
         return false
     end
 
-    function Base:mousePressed(x, y, button)
-        passMouseEvent(self, "mousePressed", x, y, function(self, x, y, button) self:onMouseDown(x, y, button) end, button)
+    function Base:focus(widget)
+        -- This variable is needed so the callback can be called after 
+        local focused = self.focused 
+        self:getGrandParent():setSubTree("focused", widget)
+        if focused ~= widget and focused and focused.onFocusLost then focused:onFocusLost() end
     end
 
-    function Base:mouseReleased(x, y, button)
-        self:setSubTree("clicked", false) -- not very efficient
-        passMouseEvent(self, "mouseReleased", x, y, function(self, x, y, button) self:onMouseUp(x, y, button) end, button)
+    -- I don't like this code, but I don't know how it can be done better.
+    function Base:mousePressed(x, y, button, noninitial)
+        local focused = self.focused 
+        if not noninitial then 
+            self:setSubTree("focused", nil)
+        end
+
+        passMouseEvent(self, "mousePressed", x, y, function(self, x, y, button) self:onMouseDown(x, y, button) end, button, true)
+
+        if not noninitial and focused and focused ~= self.focused then 
+            if focused.onFocusLost then focused:onFocusLost() end
+        end 
+    end
+
+    function Base:mouseReleased(x, y, button, noninitial)
+        passMouseEvent(self, "mouseReleased", x, y, function(self, x, y, button) self:onMouseUp(x, y, button) end, button, true)
+        if not noninitial then 
+            self:setSubTree("clicked", false)
+        end
     end
 
     function Base:mouseMove(x, y, dx, dy)
