@@ -9,7 +9,7 @@ function getModule(gui)
         self.height = 100
         self.text = "Window"
         self.closeable = true
-        self.resizeable = false
+        self.resizable = true
 
         gui.widgets.Base.init(self, params)
         gui.internal.callThemeFunction(self, "init")
