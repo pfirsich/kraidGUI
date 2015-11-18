@@ -9,7 +9,7 @@ function getModule(gui)
         self.value = 0.0
         self.scrollDelta = 0.1
         self:setParam("length", 300)
-        self:setParam("thickness", 20)
+        self:setParam("thickness", 15)
 
         gui.widgets.Base.init(self, params)
         gui.internal.callThemeFunction(self, "init")
@@ -20,10 +20,12 @@ function getModule(gui)
 
     function Scrollbar:scrollUp()
         self.value = math.min(1, self.value + self.scrollDelta)
+        if self.onChange then self:onChange() end
     end
 
     function Scrollbar:scrollDown()
         self.value = math.max(0, self.value - self.scrollDelta)
+        if self.onChange then self:onChange() end
     end
 
     function Scrollbar:onMouseDown(x, y, button)
