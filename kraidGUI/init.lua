@@ -28,6 +28,7 @@ do
 
     -- This generates a class with an optional base.
     -- The generated class can be instanced by calling it, which calls the class:init() method of it.
+    -- (Document static!)
     -- For an example usage see the gui.internal.Stack class.
     function gui.internal.class(base)
         local cls = {}
@@ -66,8 +67,14 @@ do
         local origin = gui.internal.origin()
         local top = gui.internal.canvasStack:top()
 
-        local sx, sy = math.max(top.scissor[1], x + origin[1]), math.max(top.scissor[2], y + origin[2])
-        local sw, sh = math.min(math.max(0, top.scissor[3] - x), w), math.min(math.max(0, top.scissor[4] - y), h)
+        local sx, sy, sw, sh
+        if w and h then 
+            sx, sy = math.max(top.scissor[1], x + origin[1]), math.max(top.scissor[2], y + origin[2])
+            sw = math.max(0, math.min(top.scissor[1] + top.scissor[3], x + origin[1] + w) - sx)
+            sh = math.max(0, math.min(top.scissor[2] + top.scissor[4], y + origin[2] + h) - sy)
+        else 
+            sx, sy, sw, sh = unpack(gui.internal.canvasStack:top().scissor)
+        end 
         gui.internal.canvasStack:push{origin = {x + origin[1], y + origin[2]}, scissor = breakout and gui.internal.canvasStack.stack[1].scissor or {sx, sy, sw, sh}}
 
         gui.backend.scissorRect(unpack(gui.internal.canvasStack:top().scissor))
