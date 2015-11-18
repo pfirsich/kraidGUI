@@ -10,8 +10,9 @@ function getModule(gui)
 
         self.position = {0, 0}
         self.width = 100
-        self.height = 30
+        self.height = 25
         self.cursor = {0,0}
+        self.text = ""
 
         gui.widgets.Base.init(self, params)
         gui.internal.callThemeFunction(self, "init")
@@ -61,12 +62,12 @@ function getModule(gui)
     end
 
     function LineInput:textInput(text)
-        print("'" .. text .. "'")
+        --print("'" .. text .. "'")
         self:changeText(function() self:paste(text) end)
     end
 
     function LineInput:keyPressed(key, isrepeat)
-        print(key)
+        --print(key)
 
         if key == "left" then self:moveCursor(-1) end
         if key == "right" then self:moveCursor(1) end
