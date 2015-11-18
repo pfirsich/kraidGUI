@@ -13,9 +13,9 @@ function getModule(gui)
 
     function Label:setText(text)
         -- NOTE: This should probably go into the theme
-        self.width = gui.backend.text.getWidth(text)
-        self.height = gui.backend.text.getHeight()
         self.text = text
+        self.width = gui.backend.text.getWidth(self.text) -- not sure if this works with multiple lines
+        self.height = gui.backend.text.getHeight() * (select(2, self.text:gsub('\n', '\n')) + 1)
     end
 
     Label.static.setters["text"] = Label.setText
