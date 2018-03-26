@@ -1,3 +1,5 @@
+-- for löve 0.9.2
+
 do
     local kraidGUILove = {}
 
